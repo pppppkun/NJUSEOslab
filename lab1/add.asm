@@ -397,6 +397,7 @@ calculate_mul:
 form_output:
 ;计算完成，将mul用0补位
     mov eax,42
+    mov esi,0
     add_zero:
         mov bl, [mu+eax-1]
         add bl, 0x30
@@ -420,12 +421,18 @@ form_output:
         call printf
         jmp deleteZero
     end:
+        cmp esi,0
+        je zero_end
         call printfn
         call exit
     judgeZero:
         cmp esi,1
         je print
         jmp deleteZero
+    zero_end:
+        call printf
+        call printfn
+        call exit
 
     ;; output_mul:
     ;;     mov	ecx,mu
