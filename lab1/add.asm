@@ -16,6 +16,8 @@ section	.data
 	space	db	0x40
     val db "Please input two numbers and split by ' ' ", 0x0a
     len equ $-val
+    val1 db "1"
+    len1 equ $-val1
     maxLen equ 19
 
 section .text
@@ -276,6 +278,14 @@ mul_sum_bit:
     pop edx
     call copy
     ret
+deal_one:
+    pusha
+    mov ecx, val1
+    mov edx, len1
+    call printf
+    popa
+    jp normal_
+
 
 
 main:
@@ -349,6 +359,9 @@ main:
     ;;
     output_sum:
         pusha
+        cmp dl,0x01
+        je deal_one
+    normal_:
         mov edx,ecx
         sub edx,21
         not edx
