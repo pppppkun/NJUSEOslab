@@ -1,6 +1,6 @@
 section	.bss
-	x	resb	20
-	y	resb	20
+	x	resb	21
+	y	resb	21
 	xLen	resb	1
 	yLen	resb	1
 	sum_1   resb    21
@@ -18,7 +18,7 @@ section	.data
     len equ $-val
     val1 db "1"
     len1 equ $-val1
-    maxLen equ 19
+    maxLen equ 20
 
 section .text
 
