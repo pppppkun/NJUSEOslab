@@ -1,6 +1,6 @@
 #ifndef __DATA_H__
 #define __DATA_H__
-
+#pragma pack(1)
 #include "types.h"
 
 #define SECTOR_NUM 2880
