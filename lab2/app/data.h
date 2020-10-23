@@ -84,6 +84,12 @@ typedef union DIR_ENTRY DIR_ENTRY;
 
 typedef union FAT_ENTRY_TWICE FAT_ENTRY_TWICE;
 
+union FAT
+{
+    uint8_t byte[FAT_SIZE];
+};
+
+
 typedef union FAT FAT;
 
 #endif

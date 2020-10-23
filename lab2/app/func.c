@@ -3,12 +3,20 @@
 #include "data.h"
 #include "func.h"
 
-int lsSubDir(FILE * file, DIR_ENTRY * dir_entry){
-    
+int lsSubDir(FILE * file, DIR_ENTRY * dir_entry, FAT fat){
+    uint16_t first_cluser = dir_entry->FST_CLUS;
+
+    return 0;
 }
 
 int readFAT(FILE * file, FAT * fat){
-
+    fseek(file, SECTOR_SIZE, SEEK_SET);
+    // fread((void *)fat->byte, sizeof(uint8_t), FAT_SIZE, file);
+    FAT fat_;
+    fread((void *)fat_.byte, sizeof(uint8_t), FAT_SIZE, file);
+    *fat = fat_;
+    fseek(file, FAT_SIZE, SEEK_SET);
+    return 0;
 }
 
 
@@ -46,8 +54,9 @@ int ls (const char *driver, const char *destFilePath, const char *flag){
     
     FILE *file = NULL;
     DIR_ENTRY * dir_entry;
-    FAT * fat;
+    FAT fat;
     DIR_ENTRY dirs[DIR_SIZE/DIR_ENTRY_SIZE];
+    int i = 0;
     if (driver == NULL) {
         printf("FS == NULL\n");
         return -1;
@@ -55,22 +64,17 @@ int ls (const char *driver, const char *destFilePath, const char *flag){
     file = fopen(driver, "r");
     uint8_t byte[DIR_ENTRY_SIZE];
     for(int i = 0;i<DIR_ENTRY_SIZE;i++){
-            byte[i] = 0;
+        byte[i] = 0;
     }
     
-    readFAT(file, fat);
+    readFAT(file, &fat);
 
-    fseek(file, 0, SEEK_SET);
-    int i = 0;
     for(i = 0;i<DIR_SIZE/DIR_ENTRY_SIZE;i++){
         fread((void *)dirs[i].byte, sizeof(uint8_t), DIR_ENTRY_SIZE, file);
-        if(dir_entry->type == 0){
-            continue;
-        }
     }
     printf("/\n");
     for(int j = 0;j<i;j++){
-        dir_entry = &dirs[i];
+        dir_entry = &dirs[j];
         if(dir_entry->type == ARCHIVE || dir_entry->type == DIRECTORY){
             if(dir_entry->byte[0] == 0xe5){
                 continue;
@@ -85,7 +89,7 @@ int ls (const char *driver, const char *destFilePath, const char *flag){
             if(dir_entry->byte[0] == 0xe5){
                 continue;
             }
-            lsSubDir(file, dir_entry);
+            lsSubDir(file, dir_entry, fat);
         }
     }
 
