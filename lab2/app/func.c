@@ -3,6 +3,15 @@
 #include "data.h"
 #include "func.h"
 
+int lsSubDir(FILE * file, DIR_ENTRY * dir_entry){
+    
+}
+
+int readFAT(FILE * file, FAT * fat){
+
+}
+
+
 int format (const char *driver){
     FILE *file = NULL;
     uint8_t byte[SECTOR_SIZE];
@@ -29,38 +38,58 @@ int format (const char *driver){
     }
     printf("Load Success!\n");
     // printf("%x\n", boot_record->BPB_RootEntCnt);
+    fclose(file);
     return 0;
 }
 
 int ls (const char *driver, const char *destFilePath, const char *flag){
     
     FILE *file = NULL;
-    uint8_t byte[DIR_ENTRY_SIZE];
     DIR_ENTRY * dir_entry;
+    FAT * fat;
     DIR_ENTRY dirs[DIR_SIZE/DIR_ENTRY_SIZE];
     if (driver == NULL) {
         printf("FS == NULL\n");
         return -1;
     }
-    file = fopen(driver, "r+");
+    file = fopen(driver, "r");
+    uint8_t byte[DIR_ENTRY_SIZE];
     for(int i = 0;i<DIR_ENTRY_SIZE;i++){
-        byte[i] = 0;
+            byte[i] = 0;
     }
-    //41 68 00 6f 00 75 00 73  00 65 00 0f 00 08 00 00 ff ff ff ff ff ff ff ff ff ff 00 00 ff ff ff ff
-    //41 68 00 6f 00 75 00 73  00 65 00 0f 00 08 00 00 ff ff ff ff ff ff ff ff ff ff 00 00 ff ff ff ff   
-    fseek(file, DIR_ENTRY_OFFSET, SEEK_SET);
-    for(int i = 0;i<DIR_SIZE/DIR_ENTRY_SIZE;i++){
-        fread((void *)byte, sizeof(uint8_t), DIR_ENTRY_SIZE, file);
-        // for(int i = 0;i<DIR_ENTRY_SIZE;i++){
-        //     printf("%x ", byte[i]);
-        // }
-        // printf("\n");
-        dir_entry = (DIR_ENTRY *) byte;
-        printf("%s\n", dir_entry->fileName);
+    
+    readFAT(file, fat);
+
+    fseek(file, 0, SEEK_SET);
+    int i = 0;
+    for(i = 0;i<DIR_SIZE/DIR_ENTRY_SIZE;i++){
+        fread((void *)dirs[i].byte, sizeof(uint8_t), DIR_ENTRY_SIZE, file);
         if(dir_entry->type == 0){
-            break;
+            continue;
         }
-        // printf("%x\n", dir_entry->type);
     }
+    printf("/\n");
+    for(int j = 0;j<i;j++){
+        dir_entry = &dirs[i];
+        if(dir_entry->type == ARCHIVE || dir_entry->type == DIRECTORY){
+            if(dir_entry->byte[0] == 0xe5){
+                continue;
+            }
+            printf("%s ", dir_entry->fileName);
+        }
+    }
+    printf("\n");
+    for(int j = 0;j<i;j++){
+        dir_entry = &dirs[i];
+        if(dir_entry->type == DIRECTORY){
+            if(dir_entry->byte[0] == 0xe5){
+                continue;
+            }
+            lsSubDir(file, dir_entry);
+        }
+    }
+
+
+    fclose(file);
     return 0;
 }
