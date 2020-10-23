@@ -17,6 +17,7 @@
 #define DIR_SIZE 14 * SECTOR_SIZE
 #define DIR_ENTRY_OFFSET 19 * SECTOR_SIZE
 #define FAT_ENTRY_NUM FAT_SIZE / FAT_ENTRY_SIZE
+#define DATA_OFFSET DIR_ENTRY_OFFSET + DIR_SIZE
 
 #define UNKNOWN_TYPE 0
 #define READ_ONLY 0x01
@@ -88,6 +89,15 @@ union FAT
 {
     uint8_t byte[FAT_SIZE];
 };
+
+struct block
+{
+    uint8_t byte[SECTOR_SIZE];
+    struct block * next;
+};
+
+typedef struct block block;
+
 
 
 typedef union FAT FAT;

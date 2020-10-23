@@ -8,6 +8,7 @@ OBJS = $(CFILES:.c=.o)
 
 genFS: $(CFILES)
 	$(CC) $(CFLAGS) -o genFS $(CFILES)
+	./genFS
 
 clean:
 	@#rm -rf $(OBJS) genFS fs.bin

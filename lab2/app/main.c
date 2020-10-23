@@ -7,6 +7,6 @@ int main(){
 	int fileSize = 0;
 	char filename[100];
 	// scanf("%s", filename);
-	// format("../os.img");
+	format("../os.img");
 	ls("../os.img", NULL, NULL);
 }
