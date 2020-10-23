@@ -140,7 +140,6 @@ int ls (const char *driver, const char *destFilePath, const char *flag){
         }
     }
 
-
     fclose(file);
     return 0;
 }
