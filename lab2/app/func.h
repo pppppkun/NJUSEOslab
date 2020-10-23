@@ -11,7 +11,9 @@ int cp (const char *driver, const char *srcFilePath, const char *destFilePath);
 
 int rm (const char *driver, const char *destFilePath);
 
-int ls (const char *driver, const char *destFilePath);
+int ls (const char *driver, const char *destFilePath, const char *flag);
+
+int cat (const char *driver, const char *destFilePath);
 
 int touch (const char *driver, const char *destFilePath);
 

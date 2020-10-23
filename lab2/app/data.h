@@ -12,16 +12,20 @@
 
 #define BOOT_RECORD_SIZE SECTOR_SIZE
 #define FAT_SIZE SECTOR_SIZE * 9
+#define DIR_ENTRY_SIZE 32
+#define FAT_ONE_OFFSET 512
+#define DIR_SIZE 14 * SECTOR_SIZE
+#define DIR_ENTRY_OFFSET 19 * SECTOR_SIZE
 #define FAT_ENTRY_NUM FAT_SIZE / FAT_ENTRY_SIZE
 
 #define UNKNOWN_TYPE 0
-#define REGULAR_TYPE 1
-#define DIRECTORY_TYPE 2
-#define CHARACTER_TYPE 3
-#define BLOCK_TYPE 4
-#define FIFO_TYPE 5
-#define SOCKET_TYPE 6
-#define SYMBOLIC_TYPE 7
+#define READ_ONLY 0x01
+#define HIDDEN 0x02
+#define SYSTEM 0x04
+#define VOLUME_ID 0x08
+#define DIRECTORY 0x10
+#define ARCHIVE 0x20
+#define LEN READ_ONLY | HIDDEN | SYSTEM | VOLUME_ID
 
 
 union BOOT_RECORD{
@@ -60,6 +64,23 @@ union FAT_ENTRY_TWICE{
     uint8_t byte[3];
 };
 
+union DIR_ENTRY
+{
+    uint8_t byte[DIR_ENTRY_SIZE];
+    struct
+    {
+        uint8_t fileName[11];
+        uint8_t type;
+        uint8_t reserve[10];
+        uint16_t WRT_TIME;
+        uint16_t WRT_DATE;
+        uint16_t FST_CLUS;
+        uint32_t FILE_SIZE;
+    };
+    
+};
+
+typedef union DIR_ENTRY DIR_ENTRY;
 
 typedef union FAT_ENTRY_TWICE FAT_ENTRY_TWICE;
 
