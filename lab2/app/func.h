@@ -3,18 +3,10 @@
 
 int format (const char *driver);
 
-int mkdir (const char *driver, const char *destDirPath);
+int ls (const char *driver);
 
-int rmdir (const char *driver, const char *destDirPath);
-
-int cp (const char *driver, const char *srcFilePath, const char *destFilePath);
-
-int rm (const char *driver, const char *destFilePath);
-
-int ls (const char *driver, const char *destFilePath, const char *flag);
+int ls_addition(const char *driver, const char *FilePath);
 
 int cat (const char *driver, const char *destFilePath);
-
-int touch (const char *driver, const char *destFilePath);
 
 #endif
