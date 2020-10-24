@@ -2,26 +2,34 @@
 #include "utils.h"
 #include "data.h"
 #include "func.h"
-
-void deal_ls(char * exec){
+char exec[2000];
+void deal_ls(){
+	//scanf("%s",exec);
 	int size = stringLen(exec);
 	int flag = 0;
-	for(int i = 1;i<size-1;i++){
-		if (exec[i-1]=='-'&&exec[i]=='l'&&exec[i+1]==' ')
-		{
-			flag = 1;
-			break;
-		}
-		else if(i>=2 && exec[i-2]==' '&&exec[i-1]=='-'&&exec[i]=='l'&&exec[i+1]=='\0'){
-			flag = 1;
-			break;
-		}
-	}
+
+	int ret = stringChrR(exec, ' ', &size);
+
+	
+
 	if(flag==1){
 		ls_addition("../os.img", NULL);
 	}
 	else{
 		ls("../os.img");
+	}
+}
+
+void deal_cat(){
+	int size=0;
+	int ret = stringChrR(exec, ' ', &size);
+	if(ret == -1 || size + 1 == stringLen(exec)){
+		printf("error! please input a path\n");
+		return;
+	}
+	//printf("%s\n", exec);
+	if(cat("../os.img", exec+size+1)==-1){
+        printf("invalid path! please input another path or enter ls\n");
 	}
 }
 
@@ -31,7 +39,6 @@ int main(){
 	char filename[100];
 	// scanf("%s", filename);
 	format("../os.img");
-	char exec[2000];
 	while(gets(exec)){
 		int i = 0;
 		i = stringCmp("ls", exec, 2);
@@ -41,7 +48,7 @@ int main(){
 		}
 		i = stringCmp("cat", exec, 3);
 		if(i==0){
-			printf("cat\n");
+			deal_cat();
 			continue;
 		}
 		i = stringCmp("exit", exec, 4);

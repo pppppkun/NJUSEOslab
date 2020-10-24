@@ -97,3 +97,29 @@ int setBuffer (uint8_t *buffer, int size, uint8_t value) {
         buffer[i] = value;
     return 0;
 }
+
+int stringCmpFileName(const char *fileString, const char *destString, int size){
+    int i = 0;
+    int j = 0;
+    if (fileString == NULL || destString == NULL)
+        return -1;
+    while (j != size) {
+        if (fileString[i] == ' '){
+            i++;
+            continue;
+        }
+        if (fileString[i] != destString[j]){
+            if(destString[j]=='.'){
+                j++;
+                continue;
+            }
+            return -1;
+        }
+        else if (fileString[i] == 0)
+            return 0;
+        else
+            i ++;
+            j ++;
+    }
+    return 0;
+}
