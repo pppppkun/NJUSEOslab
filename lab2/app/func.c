@@ -2,7 +2,7 @@
 #include "utils.h"
 #include "data.h"
 #include "func.h"
-int print_dir_entries(DIR_ENTRY *dirs, const int size)
+int printDirEntry(DIR_ENTRY *dirs, const int size)
 {
     DIR_ENTRY *dir_entry;
     for (int i = 0; i < size; i++)
@@ -31,7 +31,7 @@ int print_dir_entries(DIR_ENTRY *dirs, const int size)
     }
 }
 
-int print_dir_entries_with_additions(FILE *file, DIR_ENTRY *dirs, const int size, FAT fat, int *additions)
+int printDirEntriesWithAdditions(FILE *file, DIR_ENTRY *dirs, const int size, FAT fat, int *additions)
 {
     DIR_ENTRY *dir_entry;
     for (int j = 0; j < size; j++)
@@ -217,7 +217,7 @@ int lsSubDir(FILE *file, DIR_ENTRY *this_dir_entry, FAT fat, char *father_path)
 
     printf("%s%s/\n", print_father_path, this_dir_entry->fileName);
 
-    print_dir_entries(dirs, CLUSER / DIR_ENTRY_SIZE);
+    printDirEntry(dirs, CLUSER / DIR_ENTRY_SIZE);
 
     printf("\n");
     size = stringLen(print_father_path);
@@ -327,7 +327,7 @@ int ls(const char *driver)
         fread((void *)dirs[i].byte, sizeof(uint8_t), DIR_ENTRY_SIZE, file);
     }
     printf("/:\n");
-    print_dir_entries(dirs, DIR_SIZE / DIR_ENTRY_SIZE);
+    printDirEntry(dirs, DIR_SIZE / DIR_ENTRY_SIZE);
     printf("\n");
     for (int j = 0; j < i; j++)
     {
@@ -380,7 +380,7 @@ int lsSubDirAddition(FILE *file, DIR_ENTRY *this_dir_entry, FAT fat, char *fathe
         printf("/");
 
     printf("%s%s/ %d %d \n", print_father_path, this_dir_entry->fileName, additions[0], additions[1]);
-    print_dir_entries_with_additions(file, dirs, CLUSER / DIR_ENTRY_SIZE, fat, additions);
+    printDirEntriesWithAdditions(file, dirs, CLUSER / DIR_ENTRY_SIZE, fat, additions);
     printf("\n");
     size = stringLen(print_father_path);
     for (int j = 0; j < i; j++)
@@ -439,7 +439,7 @@ int ls_addition(const char *driver, const char *FilePath)
     }
     countRoot(dirs, DIR_SIZE / DIR_ENTRY_SIZE, additions);
     printf("/ %d %d :\n", additions[0], additions[1]);
-    print_dir_entries_with_additions(file, dirs, DIR_SIZE / DIR_ENTRY_SIZE, fat, additions);
+    printDirEntriesWithAdditions(file, dirs, DIR_SIZE / DIR_ENTRY_SIZE, fat, additions);
     printf("\n");
     for (int i = 0; i < DIR_SIZE / DIR_ENTRY_SIZE; i++)
     {
