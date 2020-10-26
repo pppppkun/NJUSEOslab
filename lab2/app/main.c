@@ -3,20 +3,36 @@
 #include "data.h"
 #include "func.h"
 char exec[2000];
+char filename[100];
+/**
+ * ls
+/ 2 2 :
+HOUSE 0 2
+NJU 1 1
+���_�~1 3091
+INDEX.TXT 1009
+
+/HOUSE/ 0 2 
+ROOM 18
+NIUNIU.TXT 2315
+
+/NJU/ 1 1 
+ABOUT.TXT 16
+SOFTWARE 0 2
+
+/NJU/SOFTWARE/ 0 2 
+SE1.TXT 22
+SE2.TXT 12*/
 void deal_ls(){
 	//scanf("%s",exec);
 	int size = stringLen(exec);
 	int flag = 0;
-
 	int ret = stringChrR(exec, ' ', &size);
-
-	
-
 	if(flag==1){
-		ls_addition("../os.img", NULL);
+		ls_addition(filename, NULL);
 	}
 	else{
-		ls("../os.img");
+		ls(filename);
 	}
 }
 
@@ -36,9 +52,8 @@ void deal_cat(){
 
 int main(){	
 	int fileSize = 0;
-	char filename[100];
-	// scanf("%s", filename);
-	format("../os.img");
+	scanf("%s", filename);
+	format(filename);
 	while(gets(exec)){
 		int i = 0;
 		i = stringCmp("ls", exec, 2);

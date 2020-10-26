@@ -10,6 +10,10 @@ genFS: $(CFILES)
 	$(CC) $(CFLAGS) -o genFS $(CFILES)
 	./genFS
 
+debug:
+	$(CC) $(CFLAGS) -o genFS $(CFILES)
+	gdb genFS
+
 clean:
 	@#rm -rf $(OBJS) genFS fs.bin
-	rm -rf $(OBJS) genFS
+	rm -rf $(OBJS) genFS genFS.dSYM

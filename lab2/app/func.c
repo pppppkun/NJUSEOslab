@@ -127,7 +127,7 @@ int readFile(FILE * file, FAT fat, DIR_ENTRY * dir_entry, int flag, int *file_si
             next_cluser = c + d;
         }
     }
-    file_size = &size;
+    *file_size = size;
 }
 
 int countRoot(DIR_ENTRY *dirs, const int i, int *additions)
@@ -346,7 +346,19 @@ int ls(const char *driver)
     return 0;
 }
 
-int lsSubDirAddition(FILE *file, DIR_ENTRY *this_dir_entry, FAT fat, char *father_path, int flag)
+int lsSubDirHelper(const char *father_path,const char *this_path,const char *target_path){
+    int size = stringLen(father_path);
+    int size2 = stringLen(this_path);
+    char new_father_path[size + size2+1];
+    for (int i = 0; i < size; i++) new_father_path[i] = father_path[i];
+    for (int i = size; i < size + size2; i++) new_father_path[i] = this_path[i-size];
+    if(stringCmp(target_path, new_father_path, stringLen(target_path))==0) return 0;
+    else if(stringCmp(new_father_path, target_path, stringLen(new_father_path)) == 0) return 1;
+    return -1;
+
+}
+
+int lsSubDirAddition(FILE *file, DIR_ENTRY *this_dir_entry, FAT fat, char *father_path, int flag, char *FilePath)
 {
     uint16_t first_cluser = this_dir_entry->FST_CLUS;
     uint16_t ping = 0x0F;
@@ -376,12 +388,23 @@ int lsSubDirAddition(FILE *file, DIR_ENTRY *this_dir_entry, FAT fat, char *fathe
     print_father_path[size + 1] = '\0';
     if (father_path[0] == '/')
         print_father_path[size] = '\0';
-    else
-        printf("/");
-
-    printf("%s%s/ %d %d \n", print_father_path, this_dir_entry->fileName, additions[0], additions[1]);
-    printDirEntriesWithAdditions(file, dirs, CLUSER / DIR_ENTRY_SIZE, fat, additions);
-    printf("\n");
+    int FilePathSize = stringLen(FilePath);
+    if(FilePath == NULL || lsSubDirHelper(print_father_path, this_dir_entry->fileName, FilePath)==0)
+    {
+        if (father_path[0] == '/')
+            print_father_path[size] = '\0';
+        else
+            printf("/");
+        printf("%s%s/ %d %d \n", print_father_path, this_dir_entry->fileName, additions[0], additions[1]);
+        printDirEntriesWithAdditions(file, dirs, CLUSER / DIR_ENTRY_SIZE, fat, additions);
+        printf("\n");
+    }
+    else if(lsSubDirHelper(print_father_path, this_dir_entry->fileName, FilePath)==1){
+        
+    }
+    else{
+        return 0;
+    }
     size = stringLen(print_father_path);
     for (int j = 0; j < i; j++)
     {
@@ -397,16 +420,17 @@ int lsSubDirAddition(FILE *file, DIR_ENTRY *this_dir_entry, FAT fat, char *fathe
                 continue;
             }
             int size2 = stringLen(this_dir_entry->fileName);
-            char new_father_path[size + size2];
+            char new_father_path[size + size2+1];
             for (int i = 0; i < size; i++)
                 new_father_path[i] = print_father_path[i];
             for (int i = size; i < size + size2; i++)
             {
-                new_father_path[i] = this_dir_entry->fileName[i];
+                new_father_path[i] = this_dir_entry->fileName[i-size];
                 if (this_dir_entry->fileName[i] == ' ')
                     new_father_path[i] = '\0';
             }
-            lsSubDirAddition(file, dir_entry, fat, this_dir_entry->fileName, 0);
+            new_father_path[size+size2] = '/';
+            lsSubDirAddition(file, dir_entry, fat, new_father_path, 0, FilePath);
         }
     }
     return 0;
@@ -438,8 +462,20 @@ int ls_addition(const char *driver, const char *FilePath)
         fread((void *)dirs[i].byte, sizeof(uint8_t), DIR_ENTRY_SIZE, file);
     }
     countRoot(dirs, DIR_SIZE / DIR_ENTRY_SIZE, additions);
-    printf("/ %d %d :\n", additions[0], additions[1]);
-    printDirEntriesWithAdditions(file, dirs, DIR_SIZE / DIR_ENTRY_SIZE, fat, additions);
+    if (FilePath == NULL)
+    {
+        printf("/ %d %d :\n", additions[0], additions[1]);
+        printDirEntriesWithAdditions(file, dirs, DIR_SIZE / DIR_ENTRY_SIZE, fat, additions);
+    }else{
+        int FilePathSize = stringLen(FilePath);
+        if(stringCmp(FilePath, "/", 1) == 0 && FilePathSize == 1){
+            printf("/ %d %d :\n", additions[0], additions[1]);
+            printDirEntriesWithAdditions(file, dirs, DIR_SIZE / DIR_ENTRY_SIZE, fat, additions);
+        }
+    }
+
+
+    
     printf("\n");
     for (int i = 0; i < DIR_SIZE / DIR_ENTRY_SIZE; i++)
     {
@@ -454,7 +490,7 @@ int ls_addition(const char *driver, const char *FilePath)
             {
                 continue;
             }
-            lsSubDirAddition(file, dir_entry, fat, "/", 0);
+            lsSubDirAddition(file, dir_entry, fat, "/", 0, FilePath);
         }
     }
     fclose(file);
