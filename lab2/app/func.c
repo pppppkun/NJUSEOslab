@@ -271,6 +271,10 @@ int format(const char *driver)
         return -1;
     }
     file = fopen(driver, "r");
+    if (file == NULL) {
+        printf("Failed to open image.\n");
+        return -1;
+    }
     for (int i = 0; i < SECTOR_SIZE; i++)
     {
         byte[i] = 0;
@@ -282,13 +286,13 @@ int format(const char *driver)
     {
         if (boot_record->BS_OEMName[i] != OEMName[i])
         {
-            printf("File System is not FAT12. Please input other image");
+            printf("File System is not FAT12. Please input other image\n");
             return -1;
         }
     }
     if (boot_record->BS_MN != 0xaa55)
     {
-        printf("File System is not FAT12. Please input other image");
+        printf("File System is not FAT12. Please input other image\n");
         return -1;
     }
     printf("Load Success!\n");
@@ -442,7 +446,7 @@ int ls_addition(const char *driver, const char *FilePath)
     DIR_ENTRY *dir_entry;
     FAT fat;
     DIR_ENTRY dirs[DIR_SIZE / DIR_ENTRY_SIZE];
-    int additions[3];
+    int additions[3];additions[0] = 0;additions[1]=0;additions[2]=0;
     if (driver == NULL)
     {
         printf("FS == NULL\n");
