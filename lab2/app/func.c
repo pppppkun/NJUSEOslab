@@ -585,6 +585,7 @@ int cat(const char *driver, const char *destFilePath)
     if (flag == 0)
     {
         printf("invalid path! please input another path or enter ls\n");
+        printf("???\n");
     }
     fclose(file);
     return 0;
