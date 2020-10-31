@@ -123,3 +123,26 @@ int stringCmpFileName(const char *fileString, const char *destString, int size){
     }
     return 0;
 }
+
+int iToS(int num, char * targetString){
+
+    int i = 0;
+    char t[10];
+    while(num>0){
+    
+	int k = num % 10;
+	t[i++] = k + '0';
+	num = num /10;
+
+    }
+
+    for(int j = 0;j<i;j++){
+    
+	targetString[i-j-1] = t[j];
+    
+    }
+
+    targetString[i] = '\0';
+    return 0;
+
+}

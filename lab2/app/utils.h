@@ -18,4 +18,5 @@ int stringCpy (const char *srcString, char *destString, int size);
 
 int setBuffer (uint8_t *buffer, int size, uint8_t value);
 
+int iToS(int num, char * targetString);
 #endif

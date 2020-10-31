@@ -3,10 +3,6 @@
 #include "data.h"
 #include "func.h"
 
-extern myPrint(const char *, const int);
-void agent(const char * str){
-	myPrint(str, stringLen(str));
-}
 char exec[2000];
 char filename[100];
 char exec_opr[100][100];
@@ -63,6 +59,10 @@ void deal_cat(){
 int main(){	
 	int fileSize = 0;
 	int ret = 1;
+	agent("\033[31m");
+	agent("aksdjkalsd ");
+	agent("askdjaskldjaskdjkalsd");
+	agent("\033[0m");
 	do{
 		scanf("%s", filename);
 		if(stringCmp(filename, "exit", 4)==0){

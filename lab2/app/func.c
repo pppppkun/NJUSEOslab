@@ -2,6 +2,16 @@
 #include "utils.h"
 #include "data.h"
 #include "func.h"
+
+extern myPrint(const char *, const int);
+void agent(const char * str){
+        myPrint(str, stringLen(str));
+}
+void agentc(char s){
+	char a[1];
+	a[0] = s;
+	myPrint(a,1);
+}
 int printDirEntry(DIR_ENTRY *dirs, const int size)
 {
     DIR_ENTRY *dir_entry;
@@ -14,6 +24,7 @@ int printDirEntry(DIR_ENTRY *dirs, const int size)
             {
                 continue;
             }
+	    if(dir_entry->type == DIRECTORY) agent("\033[31m");
             for (int z = 0; z < 11; z++)
             {
                 if (dir_entry->fileName[z] == ' ')
@@ -22,11 +33,12 @@ int printDirEntry(DIR_ENTRY *dirs, const int size)
                 }
                 if (dir_entry->fileName[z - 1] == ' ' && dir_entry->fileName[z] != ' ')
                 {
-                    printf(".");
+                   agent(".");
                 }
-                printf("%c", dir_entry->fileName[z]);
+                agentc(dir_entry->fileName[z]);
             }
-            printf(" ");
+	    if(dir_entry->type == DIRECTORY) agent("\033[0m");
+            agent(" ");
         }
     }
 }
@@ -47,6 +59,7 @@ int printDirEntriesWithAdditions(FILE *file, DIR_ENTRY *dirs, const int size, FA
             additions[1] = 0;
             additions[2] = 0;
             countSub(file, dir_entry, additions, fat);
+	    if(dir_entry->type == DIRECTORY) agent("\033[31m");
             for (int z = 0; z < 11; z++)
             {
                 if (dir_entry->fileName[z] == ' ')
@@ -55,17 +68,21 @@ int printDirEntriesWithAdditions(FILE *file, DIR_ENTRY *dirs, const int size, FA
                 }
                 if (dir_entry->fileName[z - 1] == ' ' && dir_entry->fileName[z] != ' ')
                 {
-                    printf(".");
+                    agent(".");
                 }
-                printf("%c", dir_entry->fileName[z]);
+                agentc(dir_entry->fileName[z]);
             }
+	    if(dir_entry->type == DIRECTORY) agent("\033[0m");
             if (dir_entry->type == DIRECTORY)
-            {
-                printf(" %d %d\n", additions[0], additions[1]);
+	    {
+		agentc(' ');char c = additions[0]+'0';agentc(c);c = additions[1]+'0';agentc(' ');agentc(c);agentc('\n');
+                //printf(" %d %d\n", additions[0], additions[1]);
             }
             if (dir_entry->type == ARCHIVE)
             {
-                printf(" %d\n", additions[2]);
+		char t[100];iToS(additions[2], t);
+		agentc(' ');agent(t);agentc('\n');
+                //printf(" %d\n", additions[2]);
             }
         }
     }

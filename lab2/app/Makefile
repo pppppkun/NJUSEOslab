@@ -23,4 +23,4 @@ debug:
 
 clean:
 	@#rm -rf $(OBJS) genFS fs.bin
-	rm -rf $(OBJS) genFS genFS.dSYM
+	rm -rf $(OBJS) genFS genFS.dSYM main
