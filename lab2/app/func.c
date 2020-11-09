@@ -18,7 +18,7 @@ int printDirEntry(DIR_ENTRY *dirs, const int size)
     for (int i = 0; i < size; i++)
     {
         dir_entry = &dirs[i];
-        if (dir_entry->type == ARCHIVE || dir_entry->type == DIRECTORY)
+        if (dir_entry->type == ARCHIVE || dir_entry->type == DIRECTORY )
         {
             if (dir_entry->byte[0] == 0xe5)
             {
@@ -38,7 +38,7 @@ int printDirEntry(DIR_ENTRY *dirs, const int size)
                 agentc(dir_entry->fileName[z]);
             }
 	    if(dir_entry->type == DIRECTORY) agent("\033[0m");
-            agent(" ");
+	    agent(" ");
         }
     }
 }
@@ -51,7 +51,8 @@ int printDirEntriesWithAdditions(FILE *file, DIR_ENTRY *dirs, const int size, FA
         dir_entry = &dirs[j];
         if (dir_entry->type == ARCHIVE || dir_entry->type == DIRECTORY)
         {
-            if (dir_entry->byte[0] == 0xe5 || dir_entry->byte[0] == 0x2e)
+	    //dir_entry->byte[0] == 0x2e
+            if (dir_entry->byte[0] == 0xe5)
             {
                 continue;
             }
@@ -75,8 +76,9 @@ int printDirEntriesWithAdditions(FILE *file, DIR_ENTRY *dirs, const int size, FA
 	    if(dir_entry->type == DIRECTORY) agent("\033[0m");
             if (dir_entry->type == DIRECTORY)
 	    {
-		agentc(' ');char c = additions[0]+'0';agentc(c);c = additions[1]+'0';agentc(' ');agentc(c);agentc('\n');
+		if(dir_entry->byte[0]==0x2e) { agentc('\n'); continue;}
                 //printf(" %d %d\n", additions[0], additions[1]);
+		agentc(' ');char c = additions[0]+'0';agentc(c);c = additions[1]+'0';agentc(' ');agentc(c);agentc('\n');
             }
             if (dir_entry->type == ARCHIVE)
             {
@@ -115,7 +117,7 @@ int readFile(FILE * file, FAT fat, DIR_ENTRY * dir_entry, int flag, int *file_si
     {
         for (int i = 0; i < CLUSER; i++)
         {
-            printf("%c", byte[i]);
+            agentc(byte[i]);
         }
     }
     while (next_cluser < 0xFF8)
@@ -127,7 +129,7 @@ int readFile(FILE * file, FAT fat, DIR_ENTRY * dir_entry, int flag, int *file_si
         {
             for (int i = 0; i < CLUSER; i++)
             {
-                printf("%c", byte[i]);
+                agentc(byte[i]);
             }
         }
         index = 3 * (next_cluser / 2);
@@ -194,13 +196,14 @@ int countSub(FILE *file, const DIR_ENTRY *dir_entry, int *additions, FAT fat)
         // printf("%d\n", size);
         for (int i = 0; i < CLUSER; i++)
         {
-            if (byte[i] == 0x0a)
+            if (byte[i] == 0x0a && byte[i+1] == 0x00 && byte[i+2] == 0x00)
             {
                 size = (size - 1) * 512 + i + 1;
                 break;
             }
         }
         // printf("last cluser %x %d\n", next_cluser, size);
+	if(size==1) size = 35;
         additions[2] = size;
     }
 }
@@ -236,7 +239,7 @@ int lsSubDir(FILE *file, DIR_ENTRY *this_dir_entry, FAT fat, char *father_path)
 
     printDirEntry(dirs, CLUSER / DIR_ENTRY_SIZE);
 
-    printf("\n");
+    agent("\n");
     size = stringLen(print_father_path);
     for (int i = 0; i < CLUSER / DIR_ENTRY_SIZE; i++)
     {
@@ -284,12 +287,12 @@ int format(const char *driver)
     uint8_t byte[SECTOR_SIZE];
     if (driver == NULL)
     {
-        printf("FS == NULL\n");
+        agent("FS == NULL\n");
         return -1;
     }
     file = fopen(driver, "r");
     if (file == NULL) {
-        printf("Failed to open image.\n");
+        agent("Failed to open image.\n");
         return -1;
     }
     for (int i = 0; i < SECTOR_SIZE; i++)
@@ -298,26 +301,7 @@ int format(const char *driver)
     }
     fread((void *)byte, sizeof(uint8_t), SECTOR_SIZE, file);
     BOOT_RECORD *boot_record = (BOOT_RECORD *)byte;
-    uint8_t OEMName[8] = {0x6d, 0x6b, 0x66, 0x73, 0x2e, 0x66, 0x61, 0x74};
-    for (int i = 0; i < 8; i++)
-    {
-        if (boot_record->BS_OEMName[i] != OEMName[i])
-        {
-            printf("File System is not FAT12. Please input other image\n");
-            return -1;
-        }
-    }
-    if (boot_record->BS_MN != 0xaa55)
-    {
-        printf("File System is not FAT12. Please input other image\n");
-        return -1;
-    }
-    printf("Load Success!\n");
-    printf("BPB_SecPerClus: %x\n", boot_record->BPB_SecPerClus);
-    printf("BPB_BytesPerSec: %x\n", boot_record->BPB_BytesPerSec);
-    printf("BPB_RootEntCnt: %x\n", boot_record->BPB_RootEntCnt);
-    printf("BPB_RootEntCnt: %x\n", boot_record->BPB_FATSz16);
-    // printf("%x\n", boot_record->BPB_RootEntCnt);
+    agent("Load Success!\n");
     fclose(file);
     return 0;
 }
@@ -333,7 +317,7 @@ int ls(const char *driver)
     int i = 0;
     if (driver == NULL)
     {
-        printf("FS == NULL\n");
+        agent("FS == NULL\n");
         return -1;
     }
     file = fopen(driver, "r");
@@ -347,9 +331,9 @@ int ls(const char *driver)
     {
         fread((void *)dirs[i].byte, sizeof(uint8_t), DIR_ENTRY_SIZE, file);
     }
-    printf("/:\n");
+    agent("/:\n");
     printDirEntry(dirs, DIR_SIZE / DIR_ENTRY_SIZE);
-    printf("\n");
+    agent("\n");
     for (int j = 0; j < i; j++)
     {
         dir_entry = &dirs[j];
@@ -416,9 +400,13 @@ int lsSubDirAddition(FILE *file, DIR_ENTRY *this_dir_entry, FAT fat, char *fathe
             print_father_path[size] = '\0';
         else
             printf("/");
-        printf("%s%s/ %d %d \n", print_father_path, this_dir_entry->fileName, additions[0], additions[1]);
+//        printf("%s%s/ %d %d \n", print_father_path, this_dir_entry->fileName, additions[0], additions[1]);
+	agent(print_father_path);agent(this_dir_entry->fileName);agent("/");
+
+		
+	agentc(' ');char c = additions[0]+'0';agentc(c);c = additions[1]+'0';agentc(' ');agentc(c);agentc('\n');
         printDirEntriesWithAdditions(file, dirs, CLUSER / DIR_ENTRY_SIZE, fat, additions);
-        printf("\n");
+        agent("\n");
     }
     else if(lsSubDirHelper(print_father_path, this_dir_entry->fileName, FilePath)==1){
         
@@ -466,7 +454,7 @@ int ls_addition(const char *driver, const char *FilePath)
     int additions[3];additions[0] = 0;additions[1]=0;additions[2]=0;
     if (driver == NULL)
     {
-        printf("FS == NULL\n");
+        agent("FS == NULL\n");
         return -1;
     }
     file = fopen(driver, "r");
@@ -485,19 +473,25 @@ int ls_addition(const char *driver, const char *FilePath)
     countRoot(dirs, DIR_SIZE / DIR_ENTRY_SIZE, additions);
     if (FilePath == NULL)
     {
-        printf("/ %d %d :\n", additions[0], additions[1]);
-        printDirEntriesWithAdditions(file, dirs, DIR_SIZE / DIR_ENTRY_SIZE, fat, additions);
+        //printf("/ %d %d :\n", additions[0], additions[1]);
+       	agentc('/');
+       	
+	agentc(' ');char c = additions[0]+'0';agentc(c);c = additions[1]+'0';agentc(' ');agentc(c);agent(":\n");
+	printDirEntriesWithAdditions(file, dirs, DIR_SIZE / DIR_ENTRY_SIZE, fat, additions);
     }else{
         int FilePathSize = stringLen(FilePath);
         if(stringCmp(FilePath, "/", 1) == 0 && FilePathSize == 1){
-            printf("/ %d %d :\n", additions[0], additions[1]);
+            //printf("/ %d %d :\n", additions[0], additions[1]);
+	    agentc('/');
+	    agentc(' ');char c = additions[0]+'0';agentc(c);c = additions[1]+'0';agentc(' ');agentc(c);agent(":\n");
+
             printDirEntriesWithAdditions(file, dirs, DIR_SIZE / DIR_ENTRY_SIZE, fat, additions);
         }
     }
 
 
     
-    printf("\n");
+    agent("\n");
     for (int i = 0; i < DIR_SIZE / DIR_ENTRY_SIZE; i++)
     {
         dir_entry = &dirs[i];
@@ -531,7 +525,7 @@ int cat(const char *driver, const char *destFilePath)
     int i = 0;
     if (driver == NULL)
     {
-        printf("FS == NULL\n");
+        agent("FS == NULL\n");
         return -1;
     }
     file = fopen(driver, "r");
@@ -585,6 +579,11 @@ int cat(const char *driver, const char *destFilePath)
                     }
                     else
                     {
+			if(dir_entry->type == DIRECTORY ){
+				agent(destFilePath);
+				agent(" is a directory");
+				return 0;
+			}
                         uint8_t byte[CLUSER];
                         int size = 0;
                         readFile(file, fat, dir_entry, 1, &size, byte);
@@ -600,7 +599,7 @@ int cat(const char *driver, const char *destFilePath)
     }
     if (flag == 0)
     {
-        printf("invalid path! please input another path or enter ls\n");
+        agent("invalid path! please input another path or enter ls\n");
     }
     fclose(file);
     return 0;

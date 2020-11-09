@@ -33,7 +33,7 @@ void deal_ls(){
 		return;
 	}
 	if(flag == 0)
-		ls(filename);
+		ls(filename); agentc('\n');
 	if(flag == 1){
 		if(index == -1)
 			ls_addition(filename, NULL);
@@ -49,9 +49,21 @@ void deal_cat(){
 		agent("error! please input a path\n");
 		return;
 	}
+	char c[stringLen(exec_opr[1])+1];
+	if(exec_opr[1][0]!='/'){
+		c[0] = '/';
+		stringCpy(exec_opr[1], c+1, stringLen(exec_opr[1]));
+		if(cat(filename, c)==-1){
+		
+        		agent("invalid path! please input another path or enter ls\n");
+		}
+		return;
+
+	}
 	//agent("%s\n", exec);
-	if(cat(filename, exec+size+1)==-1){
-        agent("invalid path! please input another path or enter ls\n");
+	if(cat(filename, exec_opr[1])==-1){
+	
+        	agent("invalid path! please input another path or enter ls\n");
 	}
 }
 
@@ -59,10 +71,7 @@ void deal_cat(){
 int main(){	
 	int fileSize = 0;
 	int ret = 1;
-	agent("\033[31m");
-	agent("aksdjkalsd ");
-	agent("askdjaskldjaskdjkalsd");
-	agent("\033[0m");
+	agent("please input a img path\n");
 	do{
 		scanf("%s", filename);
 		if(stringCmp(filename, "exit", 4)==0){
@@ -108,6 +117,11 @@ int main(){
 			return 0;
 		}
 		else{
+			if( exec[0]=='\0'||exec[0]=='\n') continue;
+			if( ret == 0 ) {
+				ret = 1;
+				continue;	
+			}
 			agent("error operation! please input correct instruction\n");
 		}
 	}

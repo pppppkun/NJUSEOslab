@@ -26,6 +26,7 @@
 #define VOLUME_ID 0x08
 #define DIRECTORY 0x10
 #define ARCHIVE 0x20
+#define WIN_FILE 0x00
 #define LEN READ_ONLY | HIDDEN | SYSTEM | VOLUME_ID
 
 
