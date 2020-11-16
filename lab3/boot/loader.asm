@@ -46,7 +46,7 @@ LABEL_START:			; <--- 从这里开始 *************
 	mov	sp, BaseOfStack
 
 	mov	dh, 0			; "Loading  "
-	call	DispStrRealMode		; 显示字符串
+	;call	DispStrRealMode		; 显示字符串
 
 	; 得到内存数
 	mov	ebx, 0			; ebx = 后续值, 开始时需为 0
@@ -164,7 +164,7 @@ LABEL_FILE_LOADED:
 	call	KillMotor		; 关闭软驱马达
 
 	mov	dh, 1			; "Ready."
-	call	DispStrRealMode		; 显示字符串
+	;call	DispStrRealMode		; 显示字符串
 	
 ; 下面准备跳入保护模式 -------------------------------------------
 
@@ -354,7 +354,7 @@ LABEL_PM_START:
 	mov	esp, TopOfStack
 
 	push	szMemChkTitle
-	call	DispStr
+	;call	DispStr
 	add	esp, 4
 
 	call	DispMemInfo
@@ -625,14 +625,14 @@ DispMemInfo:
 	mov	edi, ARDStruct		;	{			// 依次显示：BaseAddrLow，BaseAddrHigh，LengthLow，LengthHigh，Type
 .1:					;
 	push	dword [esi]		;
-	call	DispInt			;		DispInt(MemChkBuf[j*4]); // 显示一个成员
+	;call	DispInt			;		DispInt(MemChkBuf[j*4]); // 显示一个成员
 	pop	eax			;
 	stosd				;		ARDStruct[j*4] = MemChkBuf[j*4];
 	add	esi, 4			;
 	dec	edx			;
 	cmp	edx, 0			;
 	jnz	.1			;	}
-	call	DispReturn		;	printf("\n");
+	;call	DispReturn		;	printf("\n");
 	cmp	dword [dwType], 1	;	if(Type == AddressRangeMemory) // AddressRangeMemory : 1, AddressRangeReserved : 2
 	jne	.2			;	{
 	mov	eax, [dwBaseAddrLow]	;
@@ -643,13 +643,13 @@ DispMemInfo:
 .2:					;	}
 	loop	.loop			;}
 					;
-	call	DispReturn		;printf("\n");
+	;call	DispReturn		;printf("\n");
 	push	szRAMSize		;
-	call	DispStr			;printf("RAM size:");
+	;call	DispStr			;printf("RAM size:");
 	add	esp, 4			;
 					;
 	push	dword [dwMemSize]	;
-	call	DispInt			;DispInt(MemSize);
+	;call	DispInt			;DispInt(MemSize);
 	add	esp, 4			;
 
 	pop	ecx

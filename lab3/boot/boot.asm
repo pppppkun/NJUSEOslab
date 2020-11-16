@@ -45,7 +45,7 @@ LABEL_START:
 	int	10h			; int 10h
 
 	mov	dh, 0			; "Booting  "
-	call	DispStr			; 显示字符串
+	;call	DispStr			; 显示字符串
 	
 	xor	ah, ah	; ┓
 	xor	dl, dl	; ┣ 软驱复位
@@ -144,7 +144,7 @@ LABEL_GOON_LOADING_FILE:
 LABEL_FILE_LOADED:
 
 	mov	dh, 1			; "Ready."
-	call	DispStr			; 显示字符串
+	;call	DispStr			; 显示字符串
 
 ; *****************************************************************************************************
 	jmp	BaseOfLoader:OffsetOfLoader	; 这一句正式跳转到已加载到内存中的 LOADER.BIN 的开始处

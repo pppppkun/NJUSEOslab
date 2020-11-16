@@ -17,8 +17,8 @@ CC		= gcc
 LD		= ld
 ASMBFLAGS	= -I boot/include/
 ASMKFLAGS	= -I include/ -f elf
-CFLAGS		= -I include/ -c -fno-builtin
-LDFLAGS		= -s -Ttext $(ENTRYPOINT)
+CFLAGS		= -m32 -I include/ -c -fno-builtin -fno-stack-protector
+LDFLAGS		= -m elf_i386 -s -Ttext $(ENTRYPOINT)
 DASMFLAGS	= -u -o $(ENTRYPOINT) -e $(ENTRYOFFSET)
 
 # This Program
@@ -44,7 +44,7 @@ all : realclean everything
 image : realclean everything clean buildimg
 
 clean :
-	rm -f $(OBJS)
+	rm -f $(OBJS) $(ORANGESBOOT) $(ORANGESKERNEL)
 
 realclean :
 	rm -f $(OBJS) $(ORANGESBOOT) $(ORANGESKERNEL)
@@ -52,6 +52,8 @@ realclean :
 disasm :
 	$(DASM) $(DASMFLAGS) $(ORANGESKERNEL) > $(DASMOUTPUT)
 
+play: clean everything buildimg 
+	bochs -f bochsrc
 # We assume that "a.img" exists in current folder
 buildimg :
 	dd if=boot/boot.bin of=a.img bs=512 count=1 conv=notrunc
