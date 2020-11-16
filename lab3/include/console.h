@@ -18,14 +18,6 @@ typedef struct s_console
 	unsigned int	cursor;			/* 当前光标位置 */
 }CONSOLE;
 
-struct tab_queue
-{
-	struct tab_queue * next;
-	int index;
-};
-
-typedef struct tab_queue tab_queue; 
-
 
 #define SCR_UP	1	/* scroll forward */
 #define SCR_DN	-1	/* scroll backward */

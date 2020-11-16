@@ -12,7 +12,7 @@
 #endif
 
 EXTERN	int		ticks;
-
+EXTERN  int     lock;
 EXTERN	int		disp_pos;
 EXTERN	u8		gdt_ptr[6];	// 0~15:Limit  16~47:Base
 EXTERN	DESCRIPTOR	gdt[GDT_SIZE];

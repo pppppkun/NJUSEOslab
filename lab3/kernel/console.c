@@ -23,8 +23,13 @@
 PRIVATE void set_cursor(unsigned int position);
 PRIVATE void set_video_start_addr(u32 addr);
 PRIVATE void flush(CONSOLE *p_con);
+PRIVATE void make_str(char ch);
+PRIVATE void find(CONSOLE *p_con);
+PRIVATE void restore(CONSOLE *p_con);
 int tabs[1000];
 int index;
+char str[1000];
+int str_index;
 /*======================================================================*
 			   init_screen
  *======================================================================*/
@@ -105,7 +110,17 @@ PUBLIC int is_current_console(CONSOLE *p_con)
 PUBLIC void out_char(CONSOLE *p_con, char ch)
 {
 	u8 *p_vmem = (u8 *)(V_MEM_BASE + p_con->cursor * 2);
-
+	if(lock == 1 && ch != '\e' && ch != '\n'){
+		make_str(ch);
+	}
+	if(lock == 1&&ch=='\n'){
+		find(p_con);return;
+	}
+	if(lock == 1 && ch =='\e'){
+		restore(p_con);
+		lock = 0;
+		return;
+	}
 	switch (ch)
 	{
 	case '\n':
@@ -133,12 +148,18 @@ PUBLIC void out_char(CONSOLE *p_con, char ch)
 			p_con->cursor += 4;
 		}
 		break;
+	case '\e':
+		lock = 1;
+		str_index = 0;
+		break;
 	default:
 		if (p_con->cursor <
 			p_con->original_addr + p_con->v_mem_limit - 1)
 		{
 			*p_vmem++ = ch;
-			*p_vmem++ = DEFAULT_CHAR_COLOR;
+			if(lock!=1)
+				*p_vmem++ = DEFAULT_CHAR_COLOR;
+			else *p_vmem++ = 0xc;
 			p_con->cursor++;
 		}
 		break;
@@ -235,5 +256,43 @@ PUBLIC void scroll_screen(CONSOLE *p_con, int direction)
 	}
 
 	set_video_start_addr(p_con->current_start_addr);
+	set_cursor(p_con->cursor);
+}
+PRIVATE void make_str(char ch){
+	str[str_index++] = ch;
+}
+PRIVATE void find(CONSOLE * p_con){
+
+	u8 *p_vmem = (u8 *)(V_MEM_BASE + p_con->cursor * 2);
+
+	u8 *np_vmem = (u8 *)(V_MEM_BASE + p_con->original_addr * 2);
+	while(p_vmem!=np_vmem){
+		int flag = 1;
+		for(int i = 0;i<str_index;i++){
+			if(flag==0) break;
+			if(*(np_vmem+2*i)!=str[i]) flag = 0;
+		}
+		if(flag == 0){
+			np_vmem++;
+		}
+		else{
+			for(int i = 0;i<str_index;i++){
+				np_vmem++;
+				*np_vmem++ = 0xc;
+			}
+		}
+	}
+}
+PRIVATE void restore(CONSOLE *p_con){
+	u8 *p_vmem = (u8 *)(V_MEM_BASE + p_con->cursor * 2);
+	u8 *np_vmem = (u8 *)(V_MEM_BASE + p_con->original_addr * 2);
+	while(p_vmem!=np_vmem){
+		*(--p_vmem) = DEFAULT_CHAR_COLOR;
+		if(str_index>0){
+			*(--p_vmem) = ' ';
+			p_con->cursor--;
+			str_index--;
+		}else --p_vmem;
+	}
 	set_cursor(p_con->cursor);
 }
