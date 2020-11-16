@@ -60,6 +60,16 @@ PRIVATE void init_tty(TTY *p_tty)
 }
 
 /*======================================================================*
+			   clear
+ *======================================================================*/
+
+PUBLIC void tty_clear(TTY *p_tty){
+	p_tty->inbuf_count = 0;
+	p_tty->p_inbuf_head = p_tty->p_inbuf_tail = p_tty->in_buf;
+	console_clear(p_tty);
+}
+
+/*======================================================================*
 				in_process
  *======================================================================*/
 PUBLIC void in_process(TTY *p_tty, u32 key)
@@ -73,6 +83,7 @@ PUBLIC void in_process(TTY *p_tty, u32 key)
 	else
 	{
 		int raw_code = key & MASK_RAW;
+		//There put key to screen~
 		switch (raw_code)
 		{
 		case ENTER:
@@ -92,6 +103,9 @@ PUBLIC void in_process(TTY *p_tty, u32 key)
 			{
 				scroll_screen(p_tty->p_console, SCR_UP);
 			}
+			break;
+		case TAB:
+			put_key(p_tty, '\t');
 			break;
 		case F1:
 		case F2:

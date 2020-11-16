@@ -27,7 +27,7 @@ ORANGESKERNEL	= kernel.bin
 OBJS		= kernel/kernel.o kernel/syscall.o kernel/start.o kernel/main.o\
 			kernel/clock.o kernel/keyboard.o kernel/tty.o kernel/console.o\
 			kernel/i8259.o kernel/global.o kernel/protect.o kernel/proc.o\
-			lib/kliba.o lib/klib.o lib/string.o
+			kernel/clear_tty.o lib/kliba.o lib/klib.o lib/string.o
 DASMOUTPUT	= kernel.bin.asm
 
 # All Phony Targets
@@ -52,7 +52,7 @@ realclean :
 disasm :
 	$(DASM) $(DASMFLAGS) $(ORANGESKERNEL) > $(DASMOUTPUT)
 
-play: clean everything buildimg 
+run: clean everything buildimg 
 	bochs -f bochsrc
 # We assume that "a.img" exists in current folder
 buildimg :
@@ -92,6 +92,9 @@ kernel/keyboard.o: kernel/keyboard.c
 	$(CC) $(CFLAGS) -o $@ $<
 
 kernel/tty.o: kernel/tty.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+kernel/clear_tty.o: kernel/clear_tty.c 
 	$(CC) $(CFLAGS) -o $@ $<
 
 kernel/console.o: kernel/console.c
