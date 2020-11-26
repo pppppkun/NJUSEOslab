@@ -92,10 +92,11 @@ PUBLIC void console_clear(TTY *p_tty)
 	}
 
 	u8 *np_vmem = (u8 *)(V_MEM_BASE + p_tty->p_console->cursor * 2);
-	while (p_vmem != np_vmem)
+	u8 *last_vmem=(u8 *)((p_tty->p_console->original_addr + p_tty->p_console->v_mem_limit - SCREEN_WIDTH)*2+V_MEM_BASE);
+	while (last_vmem != np_vmem)
 	{
-		*(--p_vmem) = DEFAULT_CHAR_COLOR;
-		*(--p_vmem) = ' ';
+		*(--last_vmem) = DEFAULT_CHAR_COLOR;
+		*(--last_vmem) = ' ';
 	}
 
 	set_cursor(p_tty->p_console->cursor);
@@ -154,7 +155,7 @@ PUBLIC void out_char(CONSOLE *p_con, char ch)
 			{
 				if (p_con->cursor == p_con->original_addr + SCREEN_WIDTH * ((p_con->cursor - p_con->original_addr) / SCREEN_WIDTH))
 				{
-					//p_con->cursor = enter[enter_index--];
+					p_con->cursor = enter[--enter_index];
 				}
 				else
 				{
@@ -305,6 +306,7 @@ PRIVATE void make_str(char ch)
 }
 PRIVATE void find(CONSOLE *p_con)
 {
+	if(str_index == 0) return;
 	if (str_index == 1 && str[str_index - 1] == ' ')
 	{
 		find_space(p_con);

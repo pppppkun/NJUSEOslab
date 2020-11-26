@@ -25,9 +25,9 @@ PUBLIC void task_clear()
     
     while(1){
 
-        milli_delay(200000);
-        if(lock==1) continue;
         tty_clear(TTY_FIRST);
+        if(lock==1) continue;
+        milli_delay(200000);
 
     }
 
