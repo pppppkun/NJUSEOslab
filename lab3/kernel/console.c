@@ -302,6 +302,10 @@ PUBLIC void scroll_screen(CONSOLE *p_con, int direction)
 }
 PRIVATE void make_str(char ch)
 {
+	if(ch=='\b'){
+		str_index--;
+		return;
+	}
 	str[str_index++] = ch;
 }
 PRIVATE void find(CONSOLE *p_con)
