@@ -155,7 +155,8 @@ PUBLIC void out_char(CONSOLE *p_con, char ch)
 			{
 				if (p_con->cursor == p_con->original_addr + SCREEN_WIDTH * ((p_con->cursor - p_con->original_addr) / SCREEN_WIDTH))
 				{
-					p_con->cursor = enter[--enter_index];
+					if(p_con->cursor != p_con->original_addr)
+						p_con->cursor = enter[--enter_index];
 				}
 				else
 				{
@@ -320,13 +321,20 @@ PRIVATE void find(CONSOLE *p_con)
 		find_tab(p_con);
 		return;
 	}
-	u8 *p_vmem = (u8 *)(V_MEM_BASE + p_con->cursor * 2);
+	u8 *p_vmem = (u8 *)(V_MEM_BASE + p_con->cursor * 2)-str_index*2-2;
 	u8 *np_vmem = (u8 *)(V_MEM_BASE + p_con->original_addr * 2);
 	while (p_vmem >= np_vmem)
 	{
 		int flag = 1;
 		for (int i = 0; i < str_index; i++)
 		{
+			if(p_vmem>=(np_vmem + 2 * i)){
+				
+			}
+			else{
+				flag = -1;
+				break;
+			}
 			if (flag == 0)
 				break;
 			if (*(np_vmem + 2 * i) != str[i])
@@ -336,22 +344,24 @@ PRIVATE void find(CONSOLE *p_con)
 		{
 			np_vmem++;
 		}
-		else
+		else if(flag==1)
 		{
 			for (int i = 0; i < str_index; i++)
 			{
 				np_vmem++;
 				*np_vmem++ = 0x2c;
 			}
+		}else if(flag == -1){
+			return;
 		}
 	}
 }
 PRIVATE void find_space(CONSOLE *p_con)
 {
-	u8 *p_vmem = (u8 *)(V_MEM_BASE + p_con->cursor * 2);
+	u8 *p_vmem = (u8 *)(V_MEM_BASE + p_con->cursor * 2)-str_index*2-2;
 	u8 *np_vmem = (u8 *)(V_MEM_BASE + p_con->original_addr * 2);
 	//u8 *p_vmem = (u8 *)(V_MEM_BASE + p_con->cursor * 2);
-	while (p_vmem > np_vmem)
+	while (p_vmem >= np_vmem)
 	{
 		if (*np_vmem == ' ')
 		{
@@ -388,10 +398,10 @@ PRIVATE void find_space(CONSOLE *p_con)
 }
 PRIVATE void find_tab(CONSOLE *p_con)
 {
-	u8 *p_vmem = (u8 *)(V_MEM_BASE + p_con->cursor * 2);
+	u8 *p_vmem = (u8 *)(V_MEM_BASE + p_con->cursor * 2)-str_index*2-2;
 	u8 *np_vmem = (u8 *)(V_MEM_BASE + p_con->original_addr * 2);
 	//u8 *p_vmem = (u8 *)(V_MEM_BASE + p_con->cursor * 2);
-	while (p_vmem > np_vmem)
+	while (p_vmem >= np_vmem)
 	{
 		if (*np_vmem == ' ')
 		{

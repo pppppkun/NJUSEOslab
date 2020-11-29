@@ -52,7 +52,7 @@ realclean :
 disasm :
 	$(DASM) $(DASMFLAGS) $(ORANGESKERNEL) > $(DASMOUTPUT)
 
-run: realclean everything buildimg 
+run: clean everything buildimg 
 	bochs -f bochsrc
 # We assume that "a.img" exists in current folder
 buildimg :
