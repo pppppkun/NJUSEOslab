@@ -201,8 +201,13 @@ PUBLIC void out_char(CONSOLE *p_con, char ch)
 			*p_vmem++ = ch;
 			if (lock != 1)
 				*p_vmem++ = DEFAULT_CHAR_COLOR;
-			else
-				*p_vmem++ = 0x2c;
+			else{
+				if(*(p_vmem-1)==' '){
+					*p_vmem++ = 0x2c;
+				}else{
+					*p_vmem++ = 0x0c;
+				}
+			}
 			p_con->cursor++;
 		}
 		break;
@@ -349,7 +354,10 @@ PRIVATE void find(CONSOLE *p_con)
 			for (int i = 0; i < str_index; i++)
 			{
 				np_vmem++;
-				*np_vmem++ = 0x2c;
+				if(*(np_vmem-1)==' '){
+					*np_vmem++=0x2c;
+				}
+				else *np_vmem++ = 0x0c;
 			}
 		}else if(flag == -1){
 			return;
@@ -377,7 +385,7 @@ PRIVATE void find_space(CONSOLE *p_con)
 			if (flag == 1)
 			{
 				np_vmem++;
-				*np_vmem++ = 0x2c;
+				*np_vmem++ = 0x40;
 			}
 			if (flag == 0)
 			{
