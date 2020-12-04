@@ -22,7 +22,6 @@ PUBLIC void schedule()
 {
 	PROCESS *p;
 	int greatest_ticks = 0;
-
 	while (!greatest_ticks)
 	{
 		for (p = proc_table; p < proc_table + NR_TASKS + NR_PROCS; p++)
@@ -50,4 +49,11 @@ PUBLIC void schedule()
 PUBLIC int sys_get_ticks()
 {
 	return ticks;
+}
+
+PUBLIC void sys_printf(char *str)
+{
+	disp_str(str);
+	/* 通过打印空格的方式清空屏幕的前五行，并把 disp_pos 清零 */
+	return;
 }

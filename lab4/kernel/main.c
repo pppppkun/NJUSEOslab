@@ -76,8 +76,10 @@ PUBLIC int kernel_main()
 	}
 
 	proc_table[0].ticks = proc_table[0].priority = 15;
-	proc_table[1].ticks = proc_table[1].priority = 5;
+	//proc_table[1].ticks = proc_table[1].priority = 5;
 	proc_table[2].ticks = proc_table[2].priority = 3;
+	proc_table[3].ticks = proc_table[3].priority = 3;
+	proc_table[4].ticks = proc_table[4].priority = 3;
 
 	k_reenter = 0;
 	ticks = 0;
@@ -100,9 +102,12 @@ PUBLIC int kernel_main()
 void TestA()
 {
 	int i = 0;
+	//print("TestA");
+	char A[] = "TestA\n";
 	while (1)
 	{
-		milli_delay(10);
+		milli_delay(10000);
+		printf(A);
 	}
 }
 
@@ -112,10 +117,13 @@ void TestA()
 void TestB()
 {
 	int i = 0x1000;
+	char B[] = "TestB\n";
 	while (1)
 	{
-		milli_delay(10);
+		milli_delay(100000);
+		printf(B);
 	}
+	// printf("TestB");
 }
 
 /*======================================================================*
@@ -124,9 +132,12 @@ void TestB()
 void TestC()
 {
 	int i = 0x2000;
+	// printf("TestC");
+	char C[] = "TestC\n";
 	while (1)
 	{
 		/* disp_str("C."); */
-		milli_delay(10);
+		milli_delay(10000);
+		printf(C);
 	}
 }
