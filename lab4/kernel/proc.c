@@ -26,6 +26,15 @@ PUBLIC void schedule()
 	{
 		for (p = proc_table; p < proc_table + NR_TASKS + NR_PROCS; p++)
 		{
+			if(p->block == 1){
+				p->ticks--;
+				disp_str(p->p_name);
+				if(p->ticks==0){
+					p->block = 0;
+					disp_str("  I AM WAKEUP!\n");
+				}
+				continue;
+			}
 			if (p->ticks > greatest_ticks)
 			{
 				greatest_ticks = p->ticks;
@@ -37,6 +46,7 @@ PUBLIC void schedule()
 		{
 			for (p = proc_table; p < proc_table + NR_TASKS + NR_PROCS; p++)
 			{
+				if(p->block==1) continue;
 				p->ticks = p->priority;
 			}
 		}
@@ -56,4 +66,10 @@ PUBLIC void sys_printf(char *str)
 	disp_str(str);
 	/* 通过打印空格的方式清空屏幕的前五行，并把 disp_pos 清零 */
 	return;
+}
+
+PUBLIC void sys_sleep(int t){
+	p_proc_ready->block = 1;
+	p_proc_ready->ticks = t;
+	schedule();
 }

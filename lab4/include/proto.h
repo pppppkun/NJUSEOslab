@@ -55,8 +55,10 @@ PUBLIC void task_clear();
 /* proc.c */
 PUBLIC  int     sys_get_ticks();        /* sys_call */
 PUBLIC  void    sys_printf(char * str);
+PUBLIC  void    sys_sleep(int t);
 
 /* syscall.asm */
 PUBLIC  void    sys_call();             /* int_handler */
 PUBLIC  int     get_ticks();
 PUBLIC  void    printf(char * str);
+PUBLIC  void    sleep(int t);

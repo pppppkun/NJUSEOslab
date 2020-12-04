@@ -49,7 +49,7 @@ PUBLIC int kernel_main()
 
 		strcpy(p_proc->p_name, p_task->name); // name of the process
 		p_proc->pid = i;					  // pid
-
+		p_proc->block = 0;
 		p_proc->ldt_sel = selector_ldt;
 
 		memcpy(&p_proc->ldts[0], &gdt[SELECTOR_KERNEL_CS >> 3],
@@ -78,8 +78,8 @@ PUBLIC int kernel_main()
 	proc_table[0].ticks = proc_table[0].priority = 15;
 	//proc_table[1].ticks = proc_table[1].priority = 5;
 	proc_table[2].ticks = proc_table[2].priority = 3;
-	proc_table[3].ticks = proc_table[3].priority = 3;
-	proc_table[4].ticks = proc_table[4].priority = 3;
+	// proc_table[3].ticks = proc_table[3].priority = 3;
+	// proc_table[4].ticks = proc_table[4].priority = 3;
 
 	k_reenter = 0;
 	ticks = 0;
@@ -101,14 +101,19 @@ PUBLIC int kernel_main()
  *======================================================================*/
 void TestA()
 {
-	int i = 0;
+	int i = 3;
 	//print("TestA");
-	char A[] = "TestA\n";
+	char A[] = "I AM SLEEPING!\n";
+	while (i-->0)
+	{
+		sleep(5);
+		printf(A);
+	}
 	while (1)
 	{
 		milli_delay(10000);
-		printf(A);
 	}
+	
 }
 
 /*======================================================================*
@@ -120,7 +125,7 @@ void TestB()
 	char B[] = "TestB\n";
 	while (1)
 	{
-		milli_delay(100000);
+		milli_delay(100000000);
 		printf(B);
 	}
 	// printf("TestB");
@@ -131,13 +136,18 @@ void TestB()
  *======================================================================*/
 void TestC()
 {
-	int i = 0x2000;
+	int i = 5;
 	// printf("TestC");
-	char C[] = "TestC\n";
-	while (1)
+	char C[] = "TestC Zhe Yang Ni Man Yi Le Ma?\n";
+	while (i-->0)
 	{
 		/* disp_str("C."); */
 		milli_delay(10000);
 		printf(C);
 	}
+	while (1)
+	{
+		milli_delay(10000);
+	}
+	
 }
