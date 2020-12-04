@@ -17,6 +17,7 @@
 #include "proto.h"
 
 PUBLIC PROCESS proc_table[NR_TASKS + NR_PROCS];
+PUBLIC Semaphore sem[SEM_NUM];
 
 PUBLIC TASK task_table[NR_TASKS] = {
 	{task_tty, STACK_SIZE_TTY, "tty"},
@@ -34,4 +35,4 @@ PUBLIC CONSOLE console_table[NR_CONSOLES];
 
 PUBLIC irq_handler irq_table[NR_IRQ];
 
-PUBLIC system_call sys_call_table[NR_SYS_CALL] = {sys_get_ticks, sys_printf, sys_sleep};
+PUBLIC system_call sys_call_table[NR_SYS_CALL] = {sys_get_ticks, sys_printf, sys_sleep, sys_sem};

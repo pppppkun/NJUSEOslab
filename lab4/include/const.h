@@ -95,8 +95,12 @@
 #define	FLOPPY_IRQ	6	/* floppy disk */
 #define	PRINTER_IRQ	7
 #define	AT_WINI_IRQ	14	/* at winchester */
+#define SEM_INIT 0
+#define SEM_POST 1
+#define SEM_WAIT 2
+#define SEM_NUM 10
 
 /* system call */
-#define NR_SYS_CALL     3
+#define NR_SYS_CALL     4
 
 #endif /* _ORANGES_CONST_H_ */

@@ -56,9 +56,14 @@ PUBLIC void task_clear();
 PUBLIC  int     sys_get_ticks();        /* sys_call */
 PUBLIC  void    sys_printf(char * str);
 PUBLIC  void    sys_sleep(int t);
+PUBLIC  int     sys_sem(int index, int select);   
+PUBLIC  int     sys_sem_post(int index);
+PUBLIC  int     sys_sem_wait(int index);
 
 /* syscall.asm */
 PUBLIC  void    sys_call();             /* int_handler */
 PUBLIC  int     get_ticks();
 PUBLIC  void    printf(char * str);
 PUBLIC  void    sleep(int t);
+PUBLIC  int     sem_p(int t);
+PUBLIC  int     sem_v(int t);

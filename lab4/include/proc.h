@@ -47,6 +47,18 @@ typedef struct s_task {
 	char	name[32];
 }TASK;
 
+struct Semaphore
+{
+	int state;
+	int value;
+	int left;
+	int right;
+	struct s_proc * pcb[100];
+};
+
+typedef Semaphore Semaphore;
+
+
 
 /* Number of tasks & procs */
 #define NR_TASKS	2
