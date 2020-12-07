@@ -72,7 +72,7 @@ PUBLIC void sys_printf(char *str)
 
 PUBLIC void sys_sleep(int t){
 	p_proc_ready->block = 1;
-	p_proc_ready->ticks = -t;
+	p_proc_ready->ticks = -(t*HZ/1000);
 	schedule();
 }
 

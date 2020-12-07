@@ -62,18 +62,30 @@ typedef struct Semaphore Semaphore;
 
 /* Number of tasks & procs */
 #define NR_TASKS	2
-#define NR_PROCS	3
+#define NR_PROCS	6
 
 /* stacks of tasks */
 #define STACK_SIZE_TTY		0x8000
-#define STACK_SIZE_TESTA	0x8000
-#define STACK_SIZE_TESTB	0x8000
-#define STACK_SIZE_TESTC	0x8000
 #define STACK_SIZE_CLEAR	0x8000
+/*
+A   read 2
+B C read 3
+D write 3
+E write 4
+*/
+#define STACK_SIZE_READA	0x8000
+#define STACK_SIZE_READB	0x8000
+#define STACK_SIZE_READC	0x8000
+#define STACK_SIZE_WRITED	0x8000
+#define STACK_SIZE_WRITEE	0x8000
+#define STACK_SIZE_PRINTF	0x8000
 
 #define STACK_SIZE_TOTAL	(STACK_SIZE_TTY + \
 				STACK_SIZE_CLEAR + \
-				STACK_SIZE_TESTA + \
-				STACK_SIZE_TESTB + \
-				STACK_SIZE_TESTC)
+				STACK_SIZE_READA + \
+				STACK_SIZE_READB + \
+				STACK_SIZE_READC + \
+				STACK_SIZE_WRITED + \
+				STACK_SIZE_WRITEE + \
+				STACK_SIZE_PRINTF)
 

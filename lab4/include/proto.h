@@ -22,9 +22,12 @@ PUBLIC void	delay(int time);
 void restart();
 
 /* main.c */
-void TestA();
-void TestB();
-void TestC();
+void ReadA();
+void ReadB();
+void ReadC();
+void WriteD();
+void WriteE();
+void PrintF();
 
 /* i8259.c */
 PUBLIC void put_irq_handler(int irq, irq_handler handler);

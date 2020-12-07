@@ -77,9 +77,12 @@ PUBLIC int kernel_main()
 
 	proc_table[0].ticks = proc_table[0].priority = 15;
 	//proc_table[1].ticks = proc_table[1].priority = 5;
-	proc_table[2].ticks = proc_table[2].priority = 3;
-	proc_table[3].ticks = proc_table[3].priority = 3;
-	// proc_table[4].ticks = proc_table[4].priority = 3;
+	proc_table[2].ticks = proc_table[2].priority = 3;//read
+	proc_table[3].ticks = proc_table[3].priority = 3;//read
+	proc_table[4].ticks = proc_table[4].priority = 3;//read
+	proc_table[5].ticks = proc_table[5].priority = 3;//write
+	proc_table[6].ticks = proc_table[6].priority = 3;//write
+	proc_table[7].ticks = proc_table[7].priority = 3;//print
 
 	for(int i = 0;i<SEM_NUM;i++){
 		sem[i].left=sem[i].right=sem[i].state=sem[i].value=0;
@@ -101,21 +104,12 @@ PUBLIC int kernel_main()
 }
 
 /*======================================================================*
-                               TestA
+                               ReadA
  *======================================================================*/
-void TestA()
+void ReadA()
 {
-	int i = 3;
-	//print("TestA");
-	sem_index = sem_init(0);
-	sem_p(sem_index);
-	char A[] = "TESTA!\n";
+	char A[] = "ReadA!\n";
 	printf(A);
-	while (i-->0)
-	{
-		sleep(5);
-		printf(A);
-	}
 	while (1)
 	{
 		milli_delay(10000);
@@ -124,37 +118,74 @@ void TestA()
 }
 
 /*======================================================================*
-                               TestB
+                               ReadB
  *======================================================================*/
-void TestB()
+void ReadB()
 {
 	int i = 0x1000;
-	char B[] = "TestB\n";
+	char B[] = "ReadB\n";
 	printf(B);
-	milli_delay(100000);
-	sem_v(sem_index);
 	while (1)
 	{
 		milli_delay(10000);
-		printf(B);
 	}
 	// printf("TestB");
 }
 
 /*======================================================================*
-                               TestB
+                               ReadC
  *======================================================================*/
-void TestC()
+void ReadC()
 {
 	int i = 5;
 	// printf("TestC");
-	char C[] = "TestC Zhe Yang Ni Man Yi Le Ma?\n";
-	while (i-->0)
+	char C[] = "ReadC\n";
+	printf(C);
+	while (1)
 	{
-		/* disp_str("C."); */
 		milli_delay(10000);
-		printf(C);
 	}
+	
+}
+/*======================================================================*
+                               WriteD
+ *======================================================================*/
+void WriteD()
+{
+	int i = 5;
+	// printf("TestC");
+	char D[] = "WriteD\n";
+	printf(D);
+	while (1)
+	{
+		milli_delay(10000);
+	}
+	
+}
+/*======================================================================*
+                               WriteE
+ *======================================================================*/
+void WriteE()
+{
+	int i = 5;
+	// printf("TestC");
+	char E[] = "WriteE\n";
+	printf(E);
+	while (1)
+	{
+		milli_delay(10000);
+	}
+	
+}
+/*======================================================================*
+                               PrintF
+ *======================================================================*/
+void PrintF()
+{
+	int i = 5;
+	// printf("TestC");
+	char F[] = "PrintF\n";
+	printf(F);
 	while (1)
 	{
 		milli_delay(10000);
