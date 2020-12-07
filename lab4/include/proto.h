@@ -63,6 +63,7 @@ PUBLIC  int     sys_sem(int index, int select);
 PUBLIC  int     sys_sme_init(int value);   
 PUBLIC  int     sys_sem_post(int index);
 PUBLIC  int     sys_sem_wait(int index);
+PUBLIC  void     sys_color_printf(char * str);
 
 /* syscall.asm */
 PUBLIC  void    sys_call();             /* int_handler */
@@ -72,3 +73,4 @@ PUBLIC  void    sleep(int t);
 PUBLIC  int     sem_init(int value);
 PUBLIC  int     sem_p(int index);
 PUBLIC  int     sem_v(int index);
+PUBLIC  int     color_printf(char * str);

@@ -109,7 +109,7 @@ PUBLIC int kernel_main()
 void ReadA()
 {
 	char A[] = "ReadA!\n";
-	printf(A);
+	color_printf(A);
 	while (1)
 	{
 		milli_delay(10000);
@@ -124,7 +124,7 @@ void ReadB()
 {
 	int i = 0x1000;
 	char B[] = "ReadB\n";
-	printf(B);
+	color_printf(B);
 	while (1)
 	{
 		milli_delay(10000);
@@ -140,7 +140,7 @@ void ReadC()
 	int i = 5;
 	// printf("TestC");
 	char C[] = "ReadC\n";
-	printf(C);
+	color_printf(C);
 	while (1)
 	{
 		milli_delay(10000);
@@ -155,7 +155,7 @@ void WriteD()
 	int i = 5;
 	// printf("TestC");
 	char D[] = "WriteD\n";
-	printf(D);
+	color_printf(D);
 	while (1)
 	{
 		milli_delay(10000);
@@ -170,7 +170,7 @@ void WriteE()
 	int i = 5;
 	// printf("TestC");
 	char E[] = "WriteE\n";
-	printf(E);
+	color_printf(E);
 	while (1)
 	{
 		milli_delay(10000);
@@ -185,7 +185,7 @@ void PrintF()
 	int i = 5;
 	// printf("TestC");
 	char F[] = "PrintF\n";
-	printf(F);
+	color_printf(F);
 	while (1)
 	{
 		milli_delay(10000);

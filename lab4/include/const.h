@@ -101,6 +101,6 @@
 #define SEM_NUM 10
 
 /* system call */
-#define NR_SYS_CALL     4
+#define NR_SYS_CALL     5
 
 #endif /* _ORANGES_CONST_H_ */
