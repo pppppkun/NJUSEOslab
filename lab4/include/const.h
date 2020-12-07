@@ -102,5 +102,7 @@
 
 /* system call */
 #define NR_SYS_CALL     5
+#define whoFirst		0 // 0 reader 1 writer
+#define Readers			3
 
 #endif /* _ORANGES_CONST_H_ */
