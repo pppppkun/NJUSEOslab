@@ -17,6 +17,9 @@ INT_VECTOR_SYS_CALL equ 0x90
 global	get_ticks
 global 	printf
 global 	sleep
+global 	sem_init
+global 	sem_p
+global 	sem_v
 
 bits 32
 [section .text]
@@ -37,5 +40,23 @@ printf:
 sleep:
 	mov eax, sys_call_sleep
 	mov ebx, [esp+4]
+	int INT_VECTOR_SYS_CALL
+	ret
+sem_init:
+	mov eax, sys_call_sem
+	mov ebx, [esp+4]
+	mov ecx, 0
+	int INT_VECTOR_SYS_CALL
+	ret
+sem_p:
+	mov eax, sys_call_sem
+	mov ebx, [esp+4]
+	mov ecx, 2
+	int INT_VECTOR_SYS_CALL
+	ret
+sem_v:
+	mov eax, sys_call_sem
+	mov ebx, [esp+4]
+	mov ecx, 1
 	int INT_VECTOR_SYS_CALL
 	ret

@@ -56,7 +56,7 @@ struct Semaphore
 	struct s_proc * pcb[100];
 };
 
-typedef Semaphore Semaphore;
+typedef struct Semaphore Semaphore;
 
 
 

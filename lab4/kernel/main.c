@@ -78,8 +78,12 @@ PUBLIC int kernel_main()
 	proc_table[0].ticks = proc_table[0].priority = 15;
 	//proc_table[1].ticks = proc_table[1].priority = 5;
 	proc_table[2].ticks = proc_table[2].priority = 3;
-	// proc_table[3].ticks = proc_table[3].priority = 3;
+	proc_table[3].ticks = proc_table[3].priority = 3;
 	// proc_table[4].ticks = proc_table[4].priority = 3;
+
+	for(int i = 0;i<SEM_NUM;i++){
+		sem[i].left=sem[i].right=sem[i].state=sem[i].value=0;
+	}
 
 	k_reenter = 0;
 	ticks = 0;
@@ -103,7 +107,10 @@ void TestA()
 {
 	int i = 3;
 	//print("TestA");
-	char A[] = "I AM SLEEPING!\n";
+	sem_index = sem_init(0);
+	sem_p(sem_index);
+	char A[] = "TESTA!\n";
+	printf(A);
 	while (i-->0)
 	{
 		sleep(5);
@@ -123,9 +130,12 @@ void TestB()
 {
 	int i = 0x1000;
 	char B[] = "TestB\n";
+	printf(B);
+	milli_delay(100000);
+	sem_v(sem_index);
 	while (1)
 	{
-		milli_delay(100000000);
+		milli_delay(10000);
 		printf(B);
 	}
 	// printf("TestB");

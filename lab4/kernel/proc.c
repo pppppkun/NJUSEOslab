@@ -26,12 +26,14 @@ PUBLIC void schedule()
 	{
 		for (p = proc_table; p < proc_table + NR_TASKS + NR_PROCS; p++)
 		{
+			if(p->block==2){
+				continue;
+			}
 			if(p->block == 1){
-				p->ticks--;
-				disp_str(p->p_name);
+				p->ticks++;
 				if(p->ticks==0){
 					p->block = 0;
-					disp_str("  I AM WAKEUP!\n");
+					p->ticks=p->priority;
 				}
 				continue;
 			}
@@ -70,13 +72,15 @@ PUBLIC void sys_printf(char *str)
 
 PUBLIC void sys_sleep(int t){
 	p_proc_ready->block = 1;
-	p_proc_ready->ticks = t;
+	p_proc_ready->ticks = -t;
 	schedule();
 }
 
 PUBLIC int sys_sem(int value, int select){
 	switch (select)
 	{
+	case SEM_INIT:
+		return sys_sem_init(value);
 	case SEM_POST:
 		return sys_sem_post(value);
 	case SEM_WAIT:
@@ -102,7 +106,7 @@ PUBLIC int sys_sem_post(int index){
 	if(sem[index].value<=0){
 		PROCESS* n = sem[index].pcb[sem[index].left++];
 		n->block=0;
-		n->ticks=0;
+		n->ticks=n->priority;
 	}
 	return 0;
 }
@@ -110,7 +114,7 @@ PUBLIC int sys_sem_post(int index){
 PUBLIC int sys_sem_wait(int index){
 	sem[index].value--;
 	if(sem[index].value<0){
-		p_proc_ready->block=1;
+		p_proc_ready->block=2;
 		p_proc_ready->ticks=-1;
 		sem[index].pcb[sem[index].right++] = p_proc_ready;
 		schedule();
