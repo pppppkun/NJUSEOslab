@@ -77,12 +77,12 @@ PUBLIC int kernel_main()
 
 	proc_table[0].ticks = proc_table[0].priority = 15;
 	//proc_table[1].ticks = proc_table[1].priority = 5;
-	proc_table[2].ticks = proc_table[2].priority = 3; //read
-	proc_table[3].ticks = proc_table[3].priority = 3; //read
-	proc_table[4].ticks = proc_table[4].priority = 3; //read
-	proc_table[5].ticks = proc_table[5].priority = 3; //write
+	proc_table[2].ticks = proc_table[2].priority = 4; //read
+	proc_table[3].ticks = proc_table[3].priority = 4; //read
+	proc_table[4].ticks = proc_table[4].priority = 5; //read
+	proc_table[5].ticks = proc_table[5].priority = 6; //write
 	proc_table[6].ticks = proc_table[6].priority = 3; //write
-	proc_table[7].ticks = proc_table[7].priority = 3; //print
+	proc_table[7].ticks = proc_table[7].priority = 1; //print
 
 	for (int i = 0; i < SEM_NUM; i++)
 	{
@@ -135,7 +135,9 @@ PUBLIC int kernel_main()
  *======================================================================*/
 void ReadA()
 {
-	char *A[3] = {"ReaderA Begin\n", "ReaderA Read\n", "ReaderA END\n"};
+	char A[15] = "ReaderA Begin\n";
+	char B[14] = "ReaderA Read\n";
+	char C[13] = "ReaderA END\n";
 	while (1)
 	{
 		sem_p(CountMutex);
@@ -146,22 +148,25 @@ void ReadA()
 		if (readers == Readers)
 		{
 			sem_v(CountMutex);
+			sleep(1000);
 			continue;
 		}
+		now = 1;
 		readers++;
-		color_printf(A[0]);
+		color_printf(A);
 		sem_v(CountMutex);
 		//READ
-		color_printf(A[1]);
-		sleep(2000);
+		color_printf(B);
+		sleep(1000);
 		sem_p(CountMutex);
 		readers--;
-		color_printf(A[2]);
+		color_printf(C);
 		if (readers == 0)
 		{
 			sem_v(WriteMutex);
 		}
 		sem_v(CountMutex);
+		sleep(1000);
 	}
 }
 
@@ -170,7 +175,9 @@ void ReadA()
  *======================================================================*/
 void ReadB()
 {
-	char *A[3] = {"ReaderB Begin\n", "ReaderB Read\n", "ReaderB END\n"};
+	char A[15] = "ReaderB Begin\n";
+	char B[14] = "ReaderB Read\n";
+	char C[13] = "ReaderB END\n";
 	while (1)
 	{
 		sem_p(CountMutex);
@@ -181,25 +188,25 @@ void ReadB()
 		if (readers == Readers)
 		{
 			sem_v(CountMutex);
+			sleep(1000);
 			continue;
 		}
+		now = 1;
 		readers++;
-		sleep(100);
-		color_printf(A[0]);
+		color_printf(A);
 		sem_v(CountMutex);
 		//READ
-		sleep(100);
-		color_printf(A[1]);
-		sleep(2000);
+		color_printf(B);
+		sleep(1200);
 		sem_p(CountMutex);
 		readers--;
-		sleep(100);
-		color_printf(A[2]);
+		color_printf(C);
 		if (readers == 0)
 		{
 			sem_v(WriteMutex);
 		}
 		sem_v(CountMutex);
+		sleep(1000);
 	}
 }
 
@@ -208,7 +215,9 @@ void ReadB()
  *======================================================================*/
 void ReadC()
 {
-	char *A[3] = {"ReaderC Begin\n", "ReaderC Read\n", "ReaderC END\n"};
+	char A[15] = "ReaderC Begin\n";
+	char B[14] = "ReaderC Read\n";
+	char C[13] = "ReaderC END\n";
 	while (1)
 	{
 		sem_p(CountMutex);
@@ -219,25 +228,25 @@ void ReadC()
 		if (readers == Readers)
 		{
 			sem_v(CountMutex);
+			sleep(1000);
 			continue;
 		}
+		now = 1;
 		readers++;
-		sleep(100);
-		color_printf(A[0]);
+		color_printf(A);
 		sem_v(CountMutex);
 		//READ
-		sleep(100);
-		color_printf(A[1]);
-		sleep(2000);
+		color_printf(B);
+		sleep(1200);
 		sem_p(CountMutex);
 		readers--;
-		sleep(100);
-		color_printf(A[2]);
+		color_printf(C);
 		if (readers == 0)
 		{
 			sem_v(WriteMutex);
 		}
 		sem_v(CountMutex);
+		sleep(1000);
 	}
 }
 /*======================================================================*
@@ -247,14 +256,17 @@ void WriteD()
 {
 	int i = 5;
 	// color_printf("TestC");
-	char *A[3] = {"WriteD Begin\n", "WriteD Write\n", "WriteD END\n"};
+	char A[15] = "WriterD Begin\n";
+	char B[14] = "WriterD Read\n";
+	char C[13] = "WriterD END\n";
 	while (1)
 	{
 		sem_p(WriteMutex);
-		color_printf(A[0]);
-		color_printf(A[1]);
-		sleep(4000);
-		color_printf(A[0]);
+		now = 0;
+		color_printf(A);
+		color_printf(B);
+		sleep(1000);
+		color_printf(C);
 		sem_v(WriteMutex);
 	}
 }
@@ -265,14 +277,17 @@ void WriteE()
 {
 	int i = 5;
 	// color_printf("TestC");
-	char *A[3] = {"WriteE Begin\n", "WriteE Write\n", "WriteE END\n"};
+	char A[15] = "WriterE Begin\n";
+	char B[14] = "WriterE Read\n";
+	char C[13] = "WriterE END\n";
 	while (1)
 	{
 		sem_p(WriteMutex);
-		color_printf(A[0]);
-		color_printf(A[1]);
-		sleep(4000);
-		color_printf(A[0]);
+		now = 0;
+		color_printf(A);
+		color_printf(B);
+		sleep(1300);
+		color_printf(C);
 		sem_v(WriteMutex);
 	}
 }
@@ -283,9 +298,19 @@ void PrintF()
 {
 	int i = 5;
 	// color_printf("TestC");
-	char F[] = "color_PrintF\n";
+	char B[7] = "WRITE\n";
 	while (1)
 	{
-		milli_delay(10000);
+		sleep(100);
+		if(now==1){
+			char A[8] = "READ    ";
+			A[5] = readers + '0';
+			A[6] = '\n'; 
+			A[7] = '\0';
+			color_printf(A);
+		}
+		if(now==0){
+			color_printf(B);
+		}
 	}
 }

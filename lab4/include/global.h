@@ -16,6 +16,7 @@ EXTERN  int     lock;
 EXTERN	int		disp_pos;
 EXTERN  int     WriteMutex;
 EXTERN  int     CountMutex;
+EXTERN  int     now; // 0 writer 1 reader
 EXTERN  int     readers;
 EXTERN	u8		gdt_ptr[6];	// 0~15:Limit  16~47:Base
 EXTERN	DESCRIPTOR	gdt[GDT_SIZE];
