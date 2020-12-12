@@ -21,7 +21,7 @@
 PUBLIC int kernel_main()
 {
 	//disp_str("-----\"kernel_main\" begins-----\n");
-
+	block_time = 0;
 	TASK *p_task = task_table;
 	PROCESS *p_proc = proc_table;
 	char *p_task_stack = task_stack + STACK_SIZE_TOTAL;
