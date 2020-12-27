@@ -38,12 +38,12 @@ PUBLIC void schedule()
 			}
 			if (p->block == 1)
 			{
-				p->ticks++;
-				if (p->ticks == 0)
-				{
-					p->block = 0;
-					p->ticks = p->priority;
-				}
+				// p->ticks++;
+				// if (p->ticks == 0)
+				// {
+				// 	p->block = 0;
+				// 	p->ticks = p->priority;
+				// }
 				continue;
 			}
 			if (p->ticks > greatest_ticks)
@@ -225,13 +225,13 @@ PRIVATE void adjust(int pid)
 
 	proc_table[0].ticks = proc_table[0].priority = 15;
 	//proc_table[1].ticks = proc_table[1].priority = 5;
-	proc_table[2].ticks = proc_table[2].priority = 4; //read
-	proc_table[3].ticks = proc_table[3].priority = 4; //read
-	proc_table[4].ticks = proc_table[4].priority = 5; //read
-	proc_table[5].ticks = proc_table[5].priority = 6; //write
-	proc_table[6].ticks = proc_table[6].priority = 3; //write
+	proc_table[2].ticks = proc_table[2].priority = get_ticks()%8+1; //read
+	proc_table[3].ticks = proc_table[3].priority = get_ticks()%8+1; //read
+	proc_table[4].ticks = proc_table[4].priority = get_ticks()%8+1; //read
+	proc_table[5].ticks = proc_table[5].priority = get_ticks()%8+1; //write
+	proc_table[6].ticks = proc_table[6].priority = get_ticks()%8+1; //write
 	proc_table[7].ticks = proc_table[7].priority = 1; //print
-	proc_table[pid].ticks = proc_table[pid].priority = 7;
+	proc_table[pid].ticks = proc_table[pid].priority = 9;
 
 	for (int i = 0; i < SEM_NUM; i++)
 	{

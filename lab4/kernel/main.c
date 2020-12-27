@@ -74,14 +74,14 @@ PUBLIC int kernel_main()
 		p_task++;
 		selector_ldt += 1 << 3;
 	}
-
+	
 	proc_table[0].ticks = proc_table[0].priority = 15;
 	//proc_table[1].ticks = proc_table[1].priority = 5;
-	proc_table[2].ticks = proc_table[2].priority = 4; //read
-	proc_table[3].ticks = proc_table[3].priority = 4; //read
+	proc_table[2].ticks = proc_table[2].priority = 6; //read
+	proc_table[3].ticks = proc_table[3].priority = 5; //read
 	proc_table[4].ticks = proc_table[4].priority = 5; //read
 	proc_table[5].ticks = proc_table[5].priority = 6; //write
-	proc_table[6].ticks = proc_table[6].priority = 3; //write
+	proc_table[6].ticks = proc_table[6].priority = 5; //write
 	proc_table[7].ticks = proc_table[7].priority = 1; //print
 
 	for (int i = 0; i < SEM_NUM; i++)
@@ -96,6 +96,7 @@ PUBLIC int kernel_main()
 
 	WriteMutex = sem_init(1);
 	CountMutex = sem_init(1);
+	Mutex = sem_init(1);
 	readers = 0;
 	init_clock();
 	init_keyboard();
@@ -140,6 +141,7 @@ void ReadA()
 	char C[13] = "ReaderA END\n";
 	while (1)
 	{
+		sem_p(Mutex);
 		sem_p(CountMutex);
 		if (readers == 0)
 		{
@@ -155,9 +157,10 @@ void ReadA()
 		readers++;
 		color_printf(A);
 		sem_v(CountMutex);
+		sem_v(Mutex);
 		//READ
 		color_printf(B);
-		sleep(1000);
+		sleep(2000);
 		sem_p(CountMutex);
 		readers--;
 		color_printf(C);
@@ -180,6 +183,7 @@ void ReadB()
 	char C[13] = "ReaderB END\n";
 	while (1)
 	{
+		sem_p(Mutex);
 		sem_p(CountMutex);
 		if (readers == 0)
 		{
@@ -195,6 +199,7 @@ void ReadB()
 		readers++;
 		color_printf(A);
 		sem_v(CountMutex);
+		sem_v(Mutex);
 		//READ
 		color_printf(B);
 		sleep(1200);
@@ -220,6 +225,7 @@ void ReadC()
 	char C[13] = "ReaderC END\n";
 	while (1)
 	{
+		sem_p(Mutex);
 		sem_p(CountMutex);
 		if (readers == 0)
 		{
@@ -235,6 +241,7 @@ void ReadC()
 		readers++;
 		color_printf(A);
 		sem_v(CountMutex);
+		sem_v(Mutex);
 		//READ
 		color_printf(B);
 		sleep(1200);
@@ -261,6 +268,7 @@ void WriteD()
 	char C[13] = "WriterD END\n";
 	while (1)
 	{
+		sem_p(Mutex);
 		sem_p(WriteMutex);
 		now = 0;
 		color_printf(A);
@@ -268,6 +276,7 @@ void WriteD()
 		sleep(1000);
 		color_printf(C);
 		sem_v(WriteMutex);
+		sem_v(Mutex);
 	}
 }
 /*======================================================================*
@@ -282,6 +291,7 @@ void WriteE()
 	char C[13] = "WriterE END\n";
 	while (1)
 	{
+		sem_p(Mutex);
 		sem_p(WriteMutex);
 		now = 0;
 		color_printf(A);
@@ -289,6 +299,7 @@ void WriteE()
 		sleep(1300);
 		color_printf(C);
 		sem_v(WriteMutex);
+		sem_v(Mutex);
 	}
 }
 /*======================================================================*

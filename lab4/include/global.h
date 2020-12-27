@@ -16,6 +16,7 @@ EXTERN  int     lock;
 EXTERN	int		disp_pos;
 EXTERN  int     WriteMutex;
 EXTERN  int     CountMutex;
+EXTERN  int     Mutex;
 EXTERN  int     now; // 0 writer 1 reader
 EXTERN  int     readers;
 EXTERN  int     block_time;

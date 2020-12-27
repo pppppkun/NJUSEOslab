@@ -22,14 +22,46 @@ PUBLIC void clock_handler(int irq)
 {
         ticks++;
         p_proc_ready->ticks--;
+        
+        
 
         if (k_reenter != 0)
         {
+                PROCESS *p;
+                for (p = proc_table; p < proc_table + NR_TASKS + NR_PROCS; p++)
+		{
+		
+			if (p->block == 1)
+			{
+				p->ticks++;
+				if (p->ticks == 0)
+				{
+					p->block = 0;
+					p->ticks = p->priority;
+				}
+				continue;
+			}
+		}
                 return;
         }
 
         if (p_proc_ready->ticks > 0)
         {
+                PROCESS *p;
+                for (p = proc_table; p < proc_table + NR_TASKS + NR_PROCS; p++)
+		{
+		
+			if (p->block == 1)
+			{
+				p->ticks++;
+				if (p->ticks == 0)
+				{
+					p->block = 0;
+					p->ticks = p->priority;
+				}
+				continue;
+			}
+		}
                 return;
         }
 
