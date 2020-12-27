@@ -65,5 +65,6 @@ sem_v:
 color_printf:
 	mov eax, sys_call_color_printf
 	mov ebx, [esp+4]
+	mov ecx, [esp+8]
 	int INT_VECTOR_SYS_CALL
 	ret

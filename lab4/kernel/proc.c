@@ -84,9 +84,9 @@ PUBLIC void sys_printf(char *str)
 	return;
 }
 
-PUBLIC void sys_color_printf(char *str)
+PUBLIC void sys_color_printf(char *str, int color)
 {
-	disp_color_str(str, RED);
+	disp_color_str(str, color);
 	if (disp_pos > 80 * 24 * 2)
 	{
 		clear();

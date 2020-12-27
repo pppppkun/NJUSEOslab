@@ -155,15 +155,15 @@ void ReadA()
 		}
 		now = 1;
 		readers++;
-		color_printf(A);
+		color_printf(A, RED);
 		sem_v(CountMutex);
 		sem_v(Mutex);
 		//READ
-		color_printf(B);
+		color_printf(B, RED);
 		sleep(2000);
 		sem_p(CountMutex);
 		readers--;
-		color_printf(C);
+		color_printf(C, RED);
 		if (readers == 0)
 		{
 			sem_v(WriteMutex);
@@ -197,15 +197,15 @@ void ReadB()
 		}
 		now = 1;
 		readers++;
-		color_printf(A);
+		color_printf(A, BLUE);
 		sem_v(CountMutex);
 		sem_v(Mutex);
 		//READ
-		color_printf(B);
+		color_printf(B, BLUE);
 		sleep(1200);
 		sem_p(CountMutex);
 		readers--;
-		color_printf(C);
+		color_printf(C, BLUE);
 		if (readers == 0)
 		{
 			sem_v(WriteMutex);
@@ -239,15 +239,15 @@ void ReadC()
 		}
 		now = 1;
 		readers++;
-		color_printf(A);
+		color_printf(A, WHITE);
 		sem_v(CountMutex);
 		sem_v(Mutex);
 		//READ
-		color_printf(B);
+		color_printf(B, WHITE);
 		sleep(1200);
 		sem_p(CountMutex);
 		readers--;
-		color_printf(C);
+		color_printf(C, WHITE);
 		if (readers == 0)
 		{
 			sem_v(WriteMutex);
@@ -271,10 +271,10 @@ void WriteD()
 		sem_p(Mutex);
 		sem_p(WriteMutex);
 		now = 0;
-		color_printf(A);
-		color_printf(B);
+		color_printf(A, GREEN);
+		color_printf(B, GREEN);
 		sleep(1000);
-		color_printf(C);
+		color_printf(C, GREEN);
 		sem_v(WriteMutex);
 		sem_v(Mutex);
 	}
@@ -294,10 +294,10 @@ void WriteE()
 		sem_p(Mutex);
 		sem_p(WriteMutex);
 		now = 0;
-		color_printf(A);
-		color_printf(B);
+		color_printf(A, BRIGHT);
+		color_printf(B, BRIGHT);
 		sleep(1300);
-		color_printf(C);
+		color_printf(C, BRIGHT);
 		sem_v(WriteMutex);
 		sem_v(Mutex);
 	}
@@ -318,10 +318,10 @@ void PrintF()
 			A[5] = readers + '0';
 			A[6] = '\n'; 
 			A[7] = '\0';
-			color_printf(A);
+			color_printf(A, RED);
 		}
 		if(now==0){
-			color_printf(B);
+			color_printf(B, RED);
 		}
 	}
 }
